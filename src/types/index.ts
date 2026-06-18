@@ -1,0 +1,93 @@
+export interface NavigationItem {
+  id: string;
+  label: string;
+  icon: 'Calendar' | 'Camera' | 'Mail' | 'MapPin' | 'Heart';
+}
+
+export interface GalleryImage {
+  id: string;
+  src: string;
+  alt: string;
+  caption: string;
+  rotateClass: string;
+}
+
+export interface TimelineEvent {
+  id: string;
+  date: string;
+  title: string;
+  description: string;
+  image: string;
+}
+
+export interface WeddingDetail {
+  id: string;
+  title: string;
+  subtitle: string;
+  time: string;
+  location: string;
+  note: string;
+  icon: 'Calendar' | 'Clock' | 'Heart' | 'Users';
+}
+
+export interface DressCodeCategory {
+  id: string;
+  title: string;
+  description: string;
+  swatchClasses: string[];
+}
+
+export interface LocationInfo {
+  heading: string;
+  title: string;
+  address: string;
+  description: string;
+  mapEmbedUrl: string;
+}
+
+export interface HeroSlide {
+  id: string;
+  image: string;
+  alt: string;
+}
+
+export interface HeroContent {
+  heading: string;
+  subheading: string;
+  date: string;
+  description: string;
+  ctaLabel: string;
+  slides: HeroSlide[];
+}
+
+export interface PrenupVideoContent {
+  eyebrow: string;
+  scriptLine: string;
+  title: string;
+  description: string;
+  videoUrl: string;
+  posterImage: string;
+  tag: string;
+  duration: string;
+}
+
+export interface WeddingInfo {
+  navigation: NavigationItem[];
+  hero: HeroContent;
+  countdownDate: string;
+  timeline: TimelineEvent[];
+  prenupVideo: PrenupVideoContent;
+  details: WeddingDetail[];
+  dressCode: DressCodeCategory[];
+  location: LocationInfo;
+  gallery: GalleryImage[];
+  rsvpDueDate: string;
+}
+
+export interface RSVPFormData {
+  name: string;
+  email: string;
+  attendance: 'yes' | 'no' | '';
+  guests: string;
+  message: string;
+}
