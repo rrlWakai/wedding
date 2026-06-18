@@ -66,13 +66,7 @@ export default function Navbar({ items }: NavbarProps) {
                 {item.label}
               </a>
             ))}
-            <a
-              href="#rsvp"
-              className="theme-btn-primary mt-4 w-full"
-              onClick={() => setIsOpen(false)}
-            >
-              RSVP
-            </a>
+           
           </div>
         </motion.div>
       )}
