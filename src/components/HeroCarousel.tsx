@@ -98,8 +98,6 @@ export default function HeroCarousel({ hero }: HeroCarouselProps) {
             </motion.div>
           );
         })}
-        <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-black/70 via-black/35 to-black/90" />
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.45)_100%)]" />
       </div>
 
       <motion.div
@@ -107,7 +105,7 @@ export default function HeroCarousel({ hero }: HeroCarouselProps) {
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={0.12}
         onDragEnd={handleDragEnd}
-        className="relative z-10 mx-auto flex min-h-[100svh] max-w-7xl items-center justify-center px-5 py-24 sm:px-8 sm:py-28 md:px-10 lg:px-20"
+        className="relative z-10 mx-auto flex min-h-[100svh] max-w-7xl items-end justify-center px-5 py-24 sm:px-8 sm:py-28 md:px-10 lg:px-20"
       >
         <motion.div
           key={activeSlide}
@@ -116,36 +114,12 @@ export default function HeroCarousel({ hero }: HeroCarouselProps) {
           animate="visible"
           className="w-full max-w-4xl text-center sm:max-w-5xl"
         >
-          <motion.p
-            variants={textItem}
-            className="section-script text-[clamp(1.5rem,5vw,2.5rem)] text-[#f5d396]"
-          >
-            Warm, Earthy, Elegant
-          </motion.p>
-          <motion.p
-            variants={textItem}
-            className="mt-4 text-[0.65rem] uppercase tracking-[0.28em] text-white/75 sm:mt-5 sm:text-xs sm:tracking-[0.42em]"
-          >
-            A Coastal Editorial Celebration
-          </motion.p>
           <motion.h1
             variants={textItem}
-            className="mx-auto mt-6 font-[Playfair_Display] text-[clamp(2.75rem,9vw,5.5rem)] font-semibold leading-[1.05] tracking-[-0.04em] sm:mt-8"
+            className="mx-auto font-[Playfair_Display] text-[3.25rem] font-semibold leading-[1.05] tracking-[-0.04em] sm:text-[4.25rem] md:text-[5rem]"
           >
             {hero.heading}
           </motion.h1>
-          <motion.p
-            variants={textItem}
-            className="mx-auto mt-5 text-[0.65rem] uppercase tracking-[0.24em] text-[#f5d396]/90 sm:mt-6 sm:text-sm sm:tracking-[0.32em]"
-          >
-            {hero.date}
-          </motion.p>
-          <motion.p
-            variants={textItem}
-            className="mx-auto mt-8 max-w-xl text-[0.95rem] leading-7 text-white/85 sm:mt-10 sm:max-w-2xl sm:text-base sm:leading-8 md:text-lg"
-          >
-            {hero.subheading}
-          </motion.p>
         </motion.div>
       </motion.div>
 

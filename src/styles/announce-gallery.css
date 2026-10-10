@@ -1,0 +1,356 @@
+/* =========================================================
+   Announcement Strip + Curved Gallery
+   Editorial coastal wedding art direction
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   Announcement Strip — refined editorial marquee
+   --------------------------------------------------------- */
+.announce {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  padding-block: clamp(0.65rem, 1.4vw, 0.95rem);
+  background: linear-gradient(180deg, #f1e9e0 0%, #ebe2d8 100%);
+  border-top: 1px solid rgb(111 76 46 / 0.12);
+  border-bottom: 1px solid rgb(111 76 46 / 0.12);
+  color: var(--earth-brown);
+}
+
+.announce-track {
+  display: flex;
+  width: max-content;
+  flex-wrap: nowrap;
+  animation: announce-marquee 64s linear infinite;
+  will-change: transform;
+}
+
+.announce-group {
+  display: flex;
+  flex: none;
+  align-items: center;
+}
+
+.announce-item {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(0.7rem, 1.6vw, 1.1rem);
+  padding-inline: clamp(0.85rem, 2.4vw, 1.4rem);
+  white-space: nowrap;
+  font-size: clamp(0.6rem, 0.55rem + 0.3vw, 0.72rem);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.announce-text {
+  font-weight: 500;
+  color: #6f4c2e;
+  opacity: 0.92;
+}
+
+.announce-dot {
+  flex: none;
+  width: 0.24rem;
+  height: 0.24rem;
+  border-radius: 50%;
+  background: rgb(197 160 89 / 0.95);
+}
+
+.announce-link {
+  position: relative;
+  padding-bottom: 0.15rem;
+  color: #8a6a3f;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.35s ease;
+}
+
+.announce-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.45;
+  transform: scaleX(0.4);
+  transform-origin: left center;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.announce-link:hover,
+.announce-link:focus-visible {
+  color: var(--muted-gold);
+}
+
+.announce-link:hover::after,
+.announce-link:focus-visible::after {
+  transform: scaleX(1);
+  opacity: 1;
+}
+
+.announce-link:focus-visible {
+  outline: 2px solid rgb(197 160 89 / 0.9);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.announce-orn {
+  display: inline-flex;
+  flex: none;
+  width: 0.5rem;
+  height: 0.5rem;
+  color: rgb(197 160 89 / 0.85);
+}
+
+.announce-orn svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.announce-orn path {
+  fill: currentColor;
+}
+
+.announce:hover .announce-track,
+.announce:focus-within .announce-track {
+  animation-play-state: paused;
+}
+
+@keyframes announce-marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .announce-track {
+    animation: none !important;
+    transform: none;
+  }
+  .announce-group[aria-hidden='true'] {
+    display: none;
+  }
+}
+
+/* ---------------------------------------------------------
+   Curved Gallery — cinematic 3D photo ribbon
+   --------------------------------------------------------- */
+
+.gal {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  padding: clamp(3.25rem, 7vw, 5.5rem) 0 clamp(3rem, 6vw, 4.75rem);
+  /* Transparent so the row sits on the page's cream gradient — no beige band. */
+  background: transparent;
+  color: var(--text-primary);
+}
+
+/* ── Header block ──────────────────────────────────────────────────────── */
+.gal-head {
+  position: relative;
+  z-index: 2;
+  max-width: 42rem;
+  margin: 0 auto clamp(2.25rem, 5vw, 3.5rem);
+  padding: 0 clamp(1.25rem, 5vw, 2rem);
+  text-align: center;
+}
+
+.gal-eyebrow {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: #8a735c;
+}
+
+.gal-orn {
+  display: block;
+  width: clamp(8.5rem, 22vw, 13rem);
+  height: auto;
+  margin: clamp(0.9rem, 2.4vw, 1.4rem) auto;
+  color: var(--earth-brown);
+}
+
+.gal-orn-line {
+  stroke: currentColor;
+  stroke-width: 1;
+  opacity: 0.32;
+}
+
+.gal-orn-diamond {
+  fill: none;
+  stroke: var(--muted-gold);
+  stroke-width: 1.2;
+}
+
+.gal-orn-core {
+  fill: var(--muted-gold);
+}
+
+.gal-script {
+  margin: 0;
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(1.7rem, 4vw, 2.4rem);
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--muted-gold);
+}
+
+.gal-lead {
+  max-width: 34rem;
+  margin: clamp(0.9rem, 2vw, 1.25rem) auto 0;
+  font-size: clamp(0.9rem, 0.85rem + 0.2vw, 1rem);
+  line-height: 1.75;
+  color: var(--text-muted);
+}
+
+.gal-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  margin-top: clamp(1.35rem, 3vw, 2rem);
+  padding: 0.85rem 2rem;
+  border-radius: 9999px;
+  background: var(--earth-brown);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--cream);
+  text-decoration: none;
+  box-shadow: 0 14px 34px -14px rgb(111 76 46 / 0.55);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gal-btn:hover,
+.gal-btn:focus-visible {
+  background: #5a3d25;
+  box-shadow: 0 18px 40px -12px rgb(111 76 46 / 0.65);
+}
+
+.gal-btn:focus-visible {
+  outline: 2px solid rgb(197 160 89 / 0.9);
+  outline-offset: 3px;
+}
+
+/* ── Staggered head entrance ───────────────────────────────────────────── */
+.gal-head > * {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gal.is-in .gal-head > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.gal.is-in .gal-head > *:nth-child(1) { transition-delay: 0.05s; }
+.gal.is-in .gal-head > *:nth-child(2) { transition-delay: 0.14s; }
+.gal.is-in .gal-head > *:nth-child(3) { transition-delay: 0.23s; }
+.gal.is-in .gal-head > *:nth-child(4) { transition-delay: 0.32s; }
+.gal.is-in .gal-head > *:nth-child(5) { transition-delay: 0.41s; }
+
+/* ── Viewport: 3D context ──────────────────────────────────────────────── */
+/*
+ * The viewport is the perspective element, but the perspective distance is set
+ * inline by JS (it scales with the stage width). It clips horizontally only —
+ * overflow-y stays visible so photo shadows and tilted corners are never cut.
+ * It is safe for the perspective element to carry opacity; the preserve-3d
+ * element (.gal-stage) is the one that must stay free of grouping properties.
+ */
+.gal-viewport {
+  position: relative;
+  width: 100%;
+  overflow-x: clip;
+  overflow-y: visible;
+  padding-block: 28px;
+}
+
+/* ── Stage: 3D container ───────────────────────────────────────────────── */
+/*
+ * NO transform, opacity, filter, will-change or overflow here. Any
+ * compositing/grouping property here would create a new stacking context
+ * and flatten the 3D children into a 2-D plane.
+ */
+.gal-stage {
+  position: relative;
+  width: 100%;
+  transform-style: preserve-3d;
+}
+
+/* ── Photo figures ─────────────────────────────────────────────────────── */
+/*
+ * left: 50%; top: 50% set the anchor at the stage centre.
+ * JS applies: translate3d(calc(-50% + t), -50%, z) rotateY(tilt)
+ * The calc(-50% + t) centres the photo on its own width, then shifts it to its
+ * world-space slot. Width is set by JS; height comes from aspect-ratio.
+ */
+.gal-stage figure {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: 0;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  /* Override the global `* { border-radius: 0 }` rule */
+  border-radius: 5px;
+  background: var(--champagne);
+  box-shadow:
+    0 18px 34px -16px rgb(61 43 31 / 0.45),
+    0 6px 14px -10px rgb(61 43 31 / 0.25);
+  backface-visibility: hidden;
+  transform-origin: 50% 50%;
+}
+
+/* Subtle vignette overlay */
+.gal-stage figure::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    130% 100% at 50% 40%,
+    transparent 55%,
+    rgb(30 20 12 / 0.22) 100%
+  );
+}
+
+/* ── Inner image ───────────────────────────────────────────────────────── */
+.gal-stage figure img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ── Responsive perspective adjustments ────────────────────────────────── */
+@media (max-width: 760px) {
+  .gal {
+    padding-top: clamp(2.75rem, 10vw, 3.5rem);
+  }
+  .gal-head {
+    margin-bottom: clamp(1.75rem, 7vw, 2.5rem);
+  }
+  .gal-script {
+    font-size: clamp(1.5rem, 7vw, 1.9rem);
+  }
+}
+
+/* ── Reduced motion: static curved layout, no animation ───────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .gal-viewport,
+  .gal-head > * {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

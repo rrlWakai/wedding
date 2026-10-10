@@ -1,67 +1,119 @@
-import { motion } from 'framer-motion';
+import { useCallback, useEffect, useRef } from 'react';
 import type { TimelineEvent } from '../types';
-import ScrollReveal from './ScrollReveal';
-import SectionDivider from './SectionDivider';
-import { scrollRevealMotion } from '../utils/motion';
 
-interface StoryTimelineProps {
-  events: TimelineEvent[];
-}
+export default function StoryTimeline({ events }: { events: TimelineEvent[] }) {
+  const sectionRef = useRef<HTMLElement>(null);
+  const introRef = useRef<HTMLDivElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
+  const baseRef = useRef<SVGPathElement>(null);
+  const drawRef = useRef<SVGPathElement>(null);
+  const walkerRef = useRef<SVGCircleElement>(null);
+  const lenRef = useRef(0);
 
-export default function StoryTimeline({ events }: StoryTimelineProps) {
+  const update = useCallback(() => {
+    const section = sectionRef.current,
+      draw = drawRef.current,
+      walker = walkerRef.current;
+    if (!section || !draw || !walker || !lenRef.current) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const r = section.getBoundingClientRect();
+    const p = reduce
+      ? 1
+      : Math.min(1, Math.max(0, (window.innerHeight * 0.62 - r.top) / section.offsetHeight));
+    draw.style.strokeDashoffset = String(lenRef.current * (1 - p));
+    const pt = draw.getPointAtLength(lenRef.current * p);
+    walker.setAttribute('cx', String(pt.x));
+    walker.setAttribute('cy', String(pt.y));
+    walker.style.opacity = reduce ? '0' : p > 0 ? '1' : '0';
+  }, []);
+
+  const build = useCallback(() => {
+    const section = sectionRef.current,
+      svg = svgRef.current,
+      base = baseRef.current,
+      draw = drawRef.current,
+      intro = introRef.current;
+    if (!section || !svg || !base || !draw || !intro) return;
+    const r = section.getBoundingClientRect();
+    const W = r.width,
+      H = section.offsetHeight;
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    svg.style.height = `${H}px`;
+    const ib = intro.getBoundingClientRect();
+    const pts = [{ x: Math.max(30, ib.left - r.left + 12), y: ib.bottom - r.top - 8 }];
+    section.querySelectorAll<HTMLElement>('[data-knot]').forEach((k) => {
+      const b = k.getBoundingClientRect();
+      pts.push({ x: b.left + b.width / 2 - r.left, y: b.top + b.height / 2 - r.top });
+    });
+    pts.push({ x: W * 0.5, y: H });
+    let d = `M${pts[0].x} ${pts[0].y}`;
+    for (let i = 1; i < pts.length; i++) {
+      const a = pts[i - 1],
+        b = pts[i],
+        dy = b.y - a.y,
+        swing = (i % 2 ? 1 : -1) * W * 0.07;
+      d += ` C${a.x + swing} ${a.y + dy * 0.55} ${b.x - swing} ${b.y - dy * 0.45} ${b.x} ${b.y}`;
+    }
+    base.setAttribute('d', d);
+    draw.setAttribute('d', d);
+    lenRef.current = draw.getTotalLength();
+    draw.style.strokeDasharray = String(lenRef.current);
+    update();
+  }, [update]);
+
+  useEffect(() => {
+    build();
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        update();
+        ticking = false;
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', build);
+    window.addEventListener('load', build);
+    document.fonts?.ready.then(build);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', build);
+      window.removeEventListener('load', build);
+    };
+  }, [build, update]);
+
   return (
-    <div className="mx-auto max-w-6xl">
-      <ScrollReveal className="mb-16 text-center">
-        <p className="section-eyebrow">Our Story</p>
-        <p className="section-script mt-3">The Journey to Our Day</p>
-        <h2 className="section-title mt-4">Every chapter led us here</h2>
-        <div className="mt-8">
-          <SectionDivider />
-        </div>
-      </ScrollReveal>
-      <div className="relative">
-        <div className="absolute left-1/2 top-0 hidden h-full w-px bg-[#d9c5b2]/40 lg:block" />
-        <div className="space-y-24">
-          {events.map((event, index) => {
-            const isReversed = index % 2 === 1;
+    <section id="story" ref={sectionRef} className="tl">
+      <svg ref={svgRef} className="tl-trail" aria-hidden="true">
+        <path ref={baseRef} className="tl-base" />
+        <path ref={drawRef} className="tl-draw" />
+        <circle ref={walkerRef} className="tl-walker" r="6" cx="-20" cy="-20" />
+      </svg>
 
-            return (
-              <motion.article
-                key={event.id}
-                {...scrollRevealMotion(index * 0.1)}
-                className="relative grid gap-8 sm:gap-10 lg:grid-cols-2 lg:items-center"
-              >
-                <div className={`order-2 ${isReversed ? 'lg:order-2 lg:pl-8' : 'lg:order-1 lg:pr-8'}`}>
-                  <div className="theme-rounded relative aspect-[4/5] overflow-hidden border border-[#d9c5b2]/50 shadow-[0_24px_60px_-20px_rgba(111,76,46,0.28)]">
-                    <img
-                      src={event.image}
-                      alt={event.title}
-                      className="h-full w-full object-cover"
-                      loading="lazy"
-                    />
-                  </div>
-                </div>
-                <div
-                  className={`order-1 flex flex-col justify-center ${
-                    isReversed ? 'lg:order-1 lg:items-end lg:pr-8 lg:text-right' : 'lg:order-2 lg:pl-8'
-                  }`}
-                >
-                  <span className="theme-pill inline-flex bg-[#f5d396]/30 px-3 py-1 text-[0.65rem] uppercase tracking-[0.32em] text-[#6f4c2e]">
-                    {event.date}
-                  </span>
-                  <h3 className="mt-5 font-[Playfair_Display] text-[clamp(1.75rem,4vw,3rem)] font-semibold text-[#3d2b1f]">
-                    {event.title}
-                  </h3>
-                  <p className="mt-6 max-w-xl text-base leading-8 text-[#5c4a3d] sm:text-lg">
-                    {event.description}
-                  </p>
-                </div>
-                <div className="carousel-dot absolute left-1/2 top-1/2 hidden h-4 w-4 -translate-x-1/2 -translate-y-1/2 border border-[#c5a059]/50 bg-[#f5f0eb] lg:block" />
-              </motion.article>
-            );
-          })}
-        </div>
+      <div ref={introRef} className="tl-intro">
+        <span className="tl-script">The journey to our day</span>
+        <h2>Every chapter led us here</h2>
       </div>
-    </div>
+
+      {events.map((ev, i) => (
+        <article key={i} className={`tl-chap tl-v${i % 3}`}>
+          <span className="tl-year" aria-hidden="true">
+            {ev.date.match(/\d{4}/g)?.slice(-1)[0] ?? ev.date}
+          </span>
+          <figure className="tl-print">
+            <span className="tl-knot" data-knot />
+            <img src={ev.image} alt={ev.title} onLoad={build} />
+            {ev.caption && <figcaption>{ev.caption}</figcaption>}
+          </figure>
+          <div className="tl-words">
+            <span className="tl-script tl-date">{ev.date}</span>
+            <h3>{ev.title}</h3>
+            <p>{ev.description}</p>
+          </div>
+          {ev.aside && <p className="tl-aside" aria-hidden="true">{ev.aside}</p>}
+        </article>
+      ))}
+    </section>
   );
 }

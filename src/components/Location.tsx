@@ -1,63 +1,72 @@
-import { ArrowUpRight, MapPin } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { ArrowUpRight } from 'lucide-react';
 import type { LocationInfo } from '../types';
 import ScrollReveal from './ScrollReveal';
-import SectionDivider from './SectionDivider';
-import { scrollRevealMotion } from '../utils/motion';
 
 interface LocationProps {
   location: LocationInfo;
 }
 
+const FALLBACK_IMAGE =
+  'https://lh3.googleusercontent.com/aida-public/AB6AXuBI2LMgqK_q8R6GZ9ZUVSvdOvGoednU62qPvLQIEU4EbSMa3bAZPQzgFbmcQ2ao-wpv6gNNWs2pJPfL6CliF-yulk-I_aNXc2aR-jJoiIlAs81k_j5A6ORzSsamVtnFkfK_JLIsxT0jNpgJ6OzT4u0P7D43F7Vthsj6y-sf1EOl48nyigmSswjeKTikIngsyVU8TtS9nCJxIqhorFRA2fbzUxyBxjFsXJ5ksQqe2KJC9l214dNwxB9zGo1fx6uHPn55d_iaU5toTAk';
+
 export default function Location({ location }: LocationProps) {
+  const image = location.image ?? FALLBACK_IMAGE;
+  const facts = (location.facts ?? []).slice(0, 4);
+  const mapHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location.address)}`;
+
   return (
-    <div className="mx-auto max-w-6xl">
-      <ScrollReveal className="mb-14 text-center lg:hidden">
-        <p className="section-eyebrow">The Location</p>
-        <p className="section-script mt-3">{location.title}</p>
+    <div className="grid w-full lg:grid-cols-[45fr_55fr]">
+      <ScrollReveal className="relative min-h-[320px] sm:min-h-[400px] lg:min-h-[560px]" y={0}>
+        <img
+          src={image}
+          alt={`${location.title} exterior`}
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
       </ScrollReveal>
-      <div className="grid gap-10 sm:gap-12 lg:grid-cols-2 lg:items-center">
-        <ScrollReveal delay={0.05}>
-          <p className="section-eyebrow hidden lg:block">The Location</p>
-          <p className="section-script mt-3 hidden lg:block">{location.title}</p>
-          <h2 className="section-title mt-4 hidden lg:block">Where the evening unfolds</h2>
-          <p className="mt-6 max-w-xl text-base leading-8 text-[#5c4a3d]">{location.description}</p>
-          <div className="theme-card mt-8 p-6 sm:mt-10">
-            <div className="flex items-center gap-4">
-              <span className="theme-rounded flex h-12 w-12 shrink-0 items-center justify-center bg-[#f5d396]/25 text-[#6f4c2e]">
-                <MapPin size={20} />
-              </span>
-              <div>
-                <p className="text-base font-semibold text-[#3d2b1f]">{location.title}</p>
-                <p className="text-sm text-[#5c4a3d]">{location.address}</p>
-              </div>
-            </div>
-            <p className="mt-4 text-sm leading-7 text-[#5c4a3d]">
-              Valet parking is available. A shuttle service will operate from local hotels starting one hour before
-              the ceremony.
+
+      <div className="flex items-center bg-[#12110f] px-6 py-12 sm:px-10 sm:py-14 lg:px-16 lg:py-16 xl:px-20">
+        <div className="w-full max-w-[560px]">
+          <ScrollReveal>
+            <p className="text-[12px] text-[#b7b1a8]">The Venue</p>
+          </ScrollReveal>
+
+          <ScrollReveal delay={0.08}>
+            <h2 className="mt-4 text-[2rem] font-normal leading-[1.15] sm:text-[2.25rem] lg:text-[2.75rem]">
+              <span className="block text-[#f5f0eb]">We&apos;ll see you at</span>
+              <span className="block text-[#c9a96a]">{location.title}</span>
+            </h2>
+          </ScrollReveal>
+
+          <ScrollReveal delay={0.16}>
+            <p className="mt-6 max-w-[34ch] text-[13px] leading-[1.7] text-[#a8a29a] lg:text-[14px]">
+              We look forward to welcoming you at {location.title} for a memorable experience.
             </p>
-          </div>
-          <a
-            href="#gallery"
-            className="mt-8 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.26em] text-[#6f4c2e] transition hover:text-[#3d2b1f]"
-          >
-            Discover the venue
-            <ArrowUpRight size={16} />
-          </a>
-          <div className="mt-10 hidden lg:block">
-            <SectionDivider />
-          </div>
-        </ScrollReveal>
-        <motion.div
-          {...scrollRevealMotion(0.12)}
-          className="theme-rounded overflow-hidden border border-[#d9c5b2]/50 shadow-[0_24px_60px_-24px_rgba(111,76,46,0.28)]"
-        >
-          <iframe
-            title="Wedding venue map"
-            src={location.mapEmbedUrl}
-            className="aspect-4/3 w-full border-0"
-          />
-        </motion.div>
+          </ScrollReveal>
+
+          <ScrollReveal delay={0.24} className="mt-10">
+            <dl className="grid grid-cols-2 gap-x-6 gap-y-8 sm:gap-x-12">
+              {facts.map((fact) => (
+                <div key={fact.label}>
+                  <dt className="text-[11px] text-[#8a847c] lg:text-[12px]">{fact.label}:</dt>
+                  <dd className="mt-1 text-[14px] font-semibold text-[#f5f0eb]">{fact.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </ScrollReveal>
+
+          <ScrollReveal delay={0.32} className="mt-10">
+            <a
+              href={mapHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="loc-btn inline-flex w-full items-center justify-center gap-2 px-7 py-3.5 text-[13px] font-semibold text-[#f5f0eb] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c5a059] min-[480px]:w-auto"
+            >
+              Find on the Map
+              <ArrowUpRight size={15} />
+            </a>
+          </ScrollReveal>
+        </div>
       </div>
     </div>
   );

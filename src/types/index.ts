@@ -18,6 +18,8 @@ export interface TimelineEvent {
   title: string;
   description: string;
   image: string;
+  caption?: string;
+  aside?: string;
 }
 
 export interface WeddingDetail {
@@ -43,6 +45,8 @@ export interface LocationInfo {
   address: string;
   description: string;
   mapEmbedUrl: string;
+  image?: string;
+  facts?: { label: string; value: string }[];
 }
 
 export interface HeroSlide {
@@ -60,23 +64,14 @@ export interface HeroContent {
   slides: HeroSlide[];
 }
 
-export interface PrenupVideoContent {
-  eyebrow: string;
-  scriptLine: string;
-  title: string;
-  description: string;
-  videoUrl: string;
-  posterImage: string;
-  tag: string;
-  duration: string;
-}
+
 
 export interface WeddingInfo {
   navigation: NavigationItem[];
   hero: HeroContent;
   countdownDate: string;
   timeline: TimelineEvent[];
-  prenupVideo: PrenupVideoContent;
+
   details: WeddingDetail[];
   dressCode: DressCodeCategory[];
   location: LocationInfo;

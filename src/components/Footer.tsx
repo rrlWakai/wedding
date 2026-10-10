@@ -10,9 +10,8 @@ export default function Footer() {
           <a href="#story" className="transition hover:text-[#6f4c2e]">
             Our Story
           </a>
-          <a href="#film" className="transition hover:text-[#6f4c2e]">
-            Our Film
-          </a>
+          
+
           <a href="#location" className="transition hover:text-[#6f4c2e]">
             Venue
           </a>

@@ -3,7 +3,6 @@ import Navbar from './components/Navbar';
 import HeroCarousel from './components/HeroCarousel';
 import Countdown from './components/Countdown';
 import StoryTimeline from './components/StoryTimeline';
-import PrenupVideo from './components/PrenupVideo';
 import WeddingDetails from './components/WeddingDetails';
 import Location from './components/Location';
 import DressCode from './components/DressCode';
@@ -11,6 +10,8 @@ import Gallery from './components/Gallery';
 import RSVP from './components/RSVP';
 import Footer from './components/Footer';
 import { weddingInfo } from './data/wedding';
+import AnnouncementStrip from './components/AnnouncementStrip';
+import CurvedGallery from './components/CurvedGallery';
 
 const pageVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -32,12 +33,10 @@ function App() {
         <Navbar items={weddingInfo.navigation} />
         <main className="overflow-x-hidden">
           <HeroCarousel hero={weddingInfo.hero} />
+          <AnnouncementStrip />
+          <CurvedGallery />
           <section id="story" className="bg-[#f5f0eb] px-6 py-24 sm:px-10 lg:px-20">
             <StoryTimeline events={weddingInfo.timeline} />
-          </section>
-         
-          <section id="film" className="bg-[#ebe2d8] px-6 py-24 sm:px-10 lg:px-20">
-            <PrenupVideo content={weddingInfo.prenupVideo} />
           </section>
           <section id="gallery" className="bg-[#f5f0eb] px-6 py-24 sm:px-10 lg:px-20">
             <Gallery images={weddingInfo.gallery} />
@@ -46,9 +45,7 @@ function App() {
           <section id="details" className="bg-[#f5f0eb] px-6 py-24 sm:px-10 lg:px-20">
             <WeddingDetails details={weddingInfo.details} />
           </section>
-         
-         
-          <section id="location" className="bg-[#ebe2d8] px-6 py-24 sm:px-10 lg:px-20">
+          <section id="location" className="scroll-mt-[85px] bg-[#12110f] p-0 lg:scroll-mt-[73px]">
             <Location location={weddingInfo.location} />
           </section>
           <section className="bg-[#ebe2d8] px-6 py-24 sm:px-10 lg:px-20">
