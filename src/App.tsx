@@ -41,7 +41,7 @@ function App() {
           <section id="gallery" className="bg-[#f5f0eb] px-6 py-24 sm:px-10 lg:px-20">
             <Gallery images={weddingInfo.gallery} />
           </section>
-          <Countdown targetDate={weddingInfo.countdownDate} backgroundImage={weddingInfo.hero.slides[0].image} />
+          <Countdown targetDate={weddingInfo.countdownDate} backgroundImage="/CountDownSection/Cd.jpg" />
           <section id="details" className="bg-[#f5f0eb] px-6 py-24 sm:px-10 lg:px-20">
             <WeddingDetails details={weddingInfo.details} />
           </section>

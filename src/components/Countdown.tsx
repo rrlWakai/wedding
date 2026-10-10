@@ -55,7 +55,7 @@ export default function Countdown({ targetDate, backgroundImage }: CountdownProp
       id="countdown"
       className="relative overflow-hidden text-white"
       style={{
-        backgroundImage: `linear-gradient(180deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.55) 50%, rgba(0, 0, 0, 0.85) 100%), url(${backgroundImage})`,
+        backgroundImage: `url(${backgroundImage})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
