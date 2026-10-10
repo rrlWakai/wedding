@@ -53,7 +53,7 @@ export default function Countdown({ targetDate, backgroundImage }: CountdownProp
   return (
     <section
       id="countdown"
-      className="relative overflow-hidden text-white"
+      className="relative flex min-h-[100svh] items-end justify-center overflow-hidden text-white"
       style={{
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: 'cover',
@@ -62,13 +62,11 @@ export default function Countdown({ targetDate, backgroundImage }: CountdownProp
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(245,211,150,0.14)_0%,transparent_58%)]" />
 
-      <div className="relative mx-auto max-w-6xl px-5 py-24 sm:px-10 sm:py-28 lg:px-20 lg:py-32">
-        <ScrollReveal className="text-center">          <p className="section-eyebrow text-[#e8d3c0]/85">The Countdown to Forever</p>
+      <div className="relative w-full max-w-6xl px-5 pb-16 pt-24 sm:px-10 sm:pb-20 sm:pt-28 lg:px-20 lg:pb-24 lg:pt-32">
+        <ScrollReveal className="text-center">
+          <p className="section-eyebrow text-[#e8d3c0]/80">The Countdown to Forever</p>
           <p className="section-script mt-3 text-[#f5d396]">December 2, 2026</p>
-          <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-[#f5f0eb]/88 sm:text-lg">
-            Every moment brings us closer to the day the coast becomes our witness and sunset becomes our first dance.
-          </p>
-
+         
           <div className="theme-rounded mx-auto mt-10 max-w-4xl border border-white/15 bg-black/30 p-5 backdrop-blur-md sm:mt-14 sm:p-8 lg:p-10">
             <div className="grid grid-cols-2 gap-5 sm:grid-cols-4 sm:gap-0">              {countdownEntries.map((entry, index) => (
                 <div key={entry.key} className="relative flex flex-col items-center">
@@ -101,7 +99,8 @@ export default function Countdown({ targetDate, backgroundImage }: CountdownProp
               ))}
             </div>
           </div>
-        </ScrollReveal>      </div>
+        </ScrollReveal>      
+      </div>
     </section>
   );
 }

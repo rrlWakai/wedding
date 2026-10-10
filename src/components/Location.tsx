@@ -7,7 +7,7 @@ interface LocationProps {
 }
 
 const FALLBACK_IMAGE =
-  'https://lh3.googleusercontent.com/aida-public/AB6AXuBI2LMgqK_q8R6GZ9ZUVSvdOvGoednU62qPvLQIEU4EbSMa3bAZPQzgFbmcQ2ao-wpv6gNNWs2pJPfL6CliF-yulk-I_aNXc2aR-jJoiIlAs81k_j5A6ORzSsamVtnFkfK_JLIsxT0jNpgJ6OzT4u0P7D43F7Vthsj6y-sf1EOl48nyigmSswjeKTikIngsyVU8TtS9nCJxIqhorFRA2fbzUxyBxjFsXJ5ksQqe2KJC9l214dNwxB9zGo1fx6uHPn55d_iaU5toTAk';
+  '/loc.jpg';
 
 export default function Location({ location }: LocationProps) {
   const image = location.image ?? FALLBACK_IMAGE;
