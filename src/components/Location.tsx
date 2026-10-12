@@ -4,20 +4,24 @@ import ScrollReveal from './ScrollReveal';
 import SectionHeading from './SectionHeading';
 
 interface LocationProps {
-  location: LocationInfo;
+  locations: LocationInfo[];
 }
 
-const FALLBACK_IMAGE =
-  '/loc.jpg';
+const FALLBACK_IMAGE = '/loc.jpg';
 
-export default function Location({ location }: LocationProps) {
+function LocationBlock({ location, reverse }: { location: LocationInfo; reverse: boolean }) {
   const image = location.image ?? FALLBACK_IMAGE;
   const facts = (location.facts ?? []).slice(0, 4);
   const mapHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location.address)}`;
 
   return (
-    <div className="grid w-full lg:grid-cols-[45fr_55fr]">
-      <ScrollReveal className="relative min-h-[320px] sm:min-h-[400px] lg:min-h-[560px]" y={0}>
+    <div className="grid w-full lg:grid-cols-2">
+      <ScrollReveal
+        y={0}
+        className={`relative min-h-[280px] overflow-hidden sm:min-h-[380px] lg:min-h-[560px] ${
+          reverse ? 'lg:order-2' : 'lg:order-1'
+        }`}
+      >
         <img
           src={image}
           alt={`${location.title} exterior`}
@@ -26,44 +30,54 @@ export default function Location({ location }: LocationProps) {
         />
       </ScrollReveal>
 
-      <div className="flex items-center bg-[#12110f] px-6 py-12 sm:px-10 sm:py-14 lg:px-16 lg:py-16 xl:px-20">
+      <div
+        className={`loc-panel flex items-center bg-[#EAE2D6] px-6 py-10 sm:px-10 sm:py-12 lg:px-14 lg:py-16 xl:px-20 ${
+          reverse ? 'lg:order-1' : 'lg:order-2'
+        }`}
+      >
         <div className="w-full max-w-[560px]">
           <SectionHeading
-            tone="light"
-            eyebrow="The Venue"
-            script="Join us by the sea"
+            className="loc-heading"
+            eyebrow={location.eyebrow ?? 'The Venue'}
+            script={location.script}
             title={
               <>
-                <span className="block">We&apos;ll see you at</span>
-                <span className="block text-[#c9a96a]">{location.title}</span>
+                <span className="block text-[0.42em] font-normal tracking-[0.06em] text-[#7a5a40]">
+                  We&apos;ll see you at
+                </span>
+                <span className="mt-2 block break-words">{location.title}</span>
               </>
             }
-            dividerClassName="w-[clamp(11.25rem,62vw,20rem)]"
+            dividerClassName="w-[clamp(7rem,44vw,13rem)]"
           />
 
           <ScrollReveal delay={0.16}>
-            <p className="mt-6 max-w-[34ch] text-[13px] leading-[1.7] text-[#a8a29a] lg:text-[14px]">
-              We look forward to welcoming you at {location.title} for a memorable experience.
+            <p className="mt-6 max-w-[46ch] text-[13.5px] leading-[1.75] text-[#5c4a3d] lg:text-[14px]">
+              {location.description}
             </p>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.24} className="mt-10">
-            <dl className="grid grid-cols-2 gap-x-6 gap-y-8 sm:gap-x-12">
+          <ScrollReveal delay={0.24} className="mt-8">
+            <dl className="grid grid-cols-2 gap-x-6 gap-y-6 sm:gap-x-10">
               {facts.map((fact) => (
-                <div key={fact.label}>
-                  <dt className="text-[11px] text-[#8a847c] lg:text-[12px]">{fact.label}:</dt>
-                  <dd className="mt-1 text-[14px] font-semibold text-[#f5f0eb]">{fact.value}</dd>
+                <div key={fact.label} className="min-w-0">
+                  <dt className="text-[11px] uppercase tracking-[0.14em] text-[#6f4c2e]">
+                    {fact.label}
+                  </dt>
+                  <dd className="mt-1 break-words text-[14px] font-semibold text-[#3d2b1f]">
+                    {fact.value}
+                  </dd>
                 </div>
               ))}
             </dl>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.32} className="mt-10">
+          <ScrollReveal delay={0.32} className="mt-8">
             <a
               href={mapHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="loc-btn inline-flex w-full items-center justify-center gap-2 px-7 py-3.5 text-[13px] font-semibold text-[#f5f0eb] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c5a059] min-[480px]:w-auto"
+              className="loc-btn inline-flex w-full items-center justify-center gap-2 px-7 py-3.5 text-[12px] font-semibold uppercase tracking-[0.22em] text-[#f5f0eb] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#6f4c2e] min-[480px]:w-auto"
             >
               Find on the Map
               <ArrowUpRight size={15} />
@@ -71,6 +85,16 @@ export default function Location({ location }: LocationProps) {
           </ScrollReveal>
         </div>
       </div>
+    </div>
+  );
+}
+
+export default function Location({ locations }: LocationProps) {
+  return (
+    <div className="divide-y divide-[#c9b39d]">
+      {locations.map((location, index) => (
+        <LocationBlock key={location.heading} location={location} reverse={index % 2 === 1} />
+      ))}
     </div>
   );
 }

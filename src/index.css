@@ -229,6 +229,12 @@ h6 {
   background-color: #526b59;
 }
 
+/* The split venue panels sit on the warmer beige surface, so the small
+   uppercase eyebrow needs the darker earth-brown token to stay legible. */
+.loc-heading .section-eyebrow {
+  color: var(--earth-brown);
+}
+
 /* ---- FAQ (Good to know) ---- */
 .faq-bg {
   background-color: #e8e0d6;

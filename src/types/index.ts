@@ -50,6 +50,8 @@ export interface DressCodeCategory {
 }
 
 export interface LocationInfo {
+  eyebrow?: string;
+  script?: string;
   heading: string;
   title: string;
   address: string;
@@ -84,7 +86,7 @@ export interface WeddingInfo {
 
   details: WeddingDetailsBlock;
   dressCode: DressCodeCategory[];
-  location: LocationInfo;
+  locations: LocationInfo[];
   gallery: GalleryImage[];
   rsvpDueDate: string;
 }

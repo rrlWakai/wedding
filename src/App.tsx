@@ -51,8 +51,8 @@ function App() {
           <section id="details" className="faq-bg scroll-mt-20 px-6 py-12 sm:px-10 sm:py-16 lg:px-20 lg:py-20">
             <WeddingDetails details={weddingInfo.details} />
           </section>
-          <section id="location" className="scroll-mt-20 bg-[#12110f] p-0">
-            <Location location={weddingInfo.location} />
+          <section id="location" className="scroll-mt-20 bg-[var(--beige)] p-0">
+            <Location locations={weddingInfo.locations} />
           </section>
           <section className="bg-[#ebe2d8] px-6 py-12 sm:px-10 sm:py-16 lg:px-20 lg:py-20">
             <DressCode dressCode={weddingInfo.dressCode} />

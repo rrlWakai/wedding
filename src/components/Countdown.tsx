@@ -72,10 +72,10 @@ export default function Countdown({ targetDate, backgroundImage }: CountdownProp
           backgroundPosition: 'center',
         }}
       >
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(245,211,150,0.14)_0%,transparent_58%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(251, 251, 251, 0)_0%,transparent_58%)]" />
 
         <div className="relative w-full max-w-6xl px-5 pb-16 pt-24 sm:px-10 sm:pb-20 sm:pt-28 lg:px-20 lg:pb-24 lg:pt-32">
-          <div className="theme-rounded mx-auto max-w-4xl border border-white/15 bg-black/30 p-5 backdrop-blur-md sm:p-8 lg:p-10">
+          <div className="theme-rounded mx-auto max-w-4xl border border-white/10 bg-black/0 p-5 backdrop-blur-md sm:p-8 lg:p-10">
             <div className="grid grid-cols-2 gap-5 sm:grid-cols-4 sm:gap-0">
               {countdownEntries.map((entry, index) => (
                 <div key={entry.key} className="relative flex flex-col items-center">
@@ -100,7 +100,7 @@ export default function Countdown({ targetDate, backgroundImage }: CountdownProp
                         {countdown[entry.key]}
                       </motion.span>
                     </AnimatePresence>
-                    <span className="mt-3 text-[0.65rem] uppercase tracking-[0.38em] text-[#e8d3c0]/80">
+                    <span className="mt-3 text-[0.65rem] uppercase tracking-[0.38em] text-[#000000]">
                       {entry.label}
                     </span>
                   </div>

@@ -123,9 +123,6 @@ export default function HeroCarousel({ hero }: HeroCarouselProps) {
         </motion.div>
       </motion.div>
 
-      <div className="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2.5 sm:bottom-12 sm:gap-3">
-        {dotButtons}
-      </div>
     </section>
   );
 }

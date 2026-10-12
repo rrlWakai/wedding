@@ -109,22 +109,43 @@ export const weddingInfo: WeddingInfo = {
       swatchClasses: ['bg-[#FFFFFF]', 'bg-[#000000]', 'bg-[#ff00ff]'],
     },
   ],
-  location: {
-    heading: 'The Location',
-    title: 'Azure Shore Estate',
-    address: '1024 Coast Highway, Malibu, CA 90265',
-    description:
-      'Our celebration will take place at a private coastal estate overlooking the Pacific. Valet parking is provided at the main gate, and a shuttle will be available from nearby accommodations.',
-    mapEmbedUrl:
-      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3303.6835939775755!2d-118.67956368478304!3d34.03123848060825!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80e82b6531a1783f%3A0x7572a3fdc16f91a4!2sMalibu%2C%20CA%2090265!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus',
-    image: '/loc.jpg',
-    facts: [
-      { label: 'Venue', value: 'Azure Shore Estate' },
-      { label: 'Address', value: '1024 Coast Highway, Malibu, CA 90265' },
-      { label: 'Parking', value: 'Valet available' },
-      { label: 'Shuttle', value: 'From local hotels, 1 hour before the ceremony' },
-    ],
-  },
+  locations: [
+    {
+      eyebrow: 'The Ceremony',
+      script: 'Where we exchange our vows',
+      heading: 'The Church',
+      title: 'St. Gabriel Parish Church',
+      address: '215 Ocean Avenue, Malibu, CA 90265',
+      description:
+        'We will gather at St. Gabriel Parish Church to exchange our vows. Please arrive a little early so we can begin the ceremony together.',
+      mapEmbedUrl: '',
+      image: '/loc.jpg',
+      facts: [
+        { label: 'Ceremony', value: '4:00 PM' },
+        { label: 'Address', value: '215 Ocean Avenue, Malibu, CA 90265' },
+        { label: 'Parking', value: 'Available on site' },
+        { label: 'Arrival', value: 'Please arrive by 3:30 PM' },
+      ],
+    },
+    {
+      eyebrow: 'The Reception',
+      script: 'Dinner, dancing & celebrating',
+      heading: 'The Reception',
+      title: 'Azure Shore Estate',
+      address: '1024 Coast Highway, Malibu, CA 90265',
+      description:
+        'Our celebration continues at a private coastal estate overlooking the Pacific. Valet parking is provided at the main gate, and a shuttle will be available from nearby accommodations.',
+      mapEmbedUrl:
+        'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3303.6835939775755!2d-118.67956368478304!3d34.03123848060825!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80e82b6531a1783f%3A0x7572a3fdc16f91a4!2sMalibu%2C%20CA%2090265!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus',
+      image: '/loc.jpg',
+      facts: [
+        { label: 'Reception', value: '6:30 PM' },
+        { label: 'Address', value: '1024 Coast Highway, Malibu, CA 90265' },
+        { label: 'Parking', value: 'Valet available' },
+        { label: 'Shuttle', value: 'From local hotels, 1 hour before' },
+      ],
+    },
+  ],
   gallery: galleryImages,
   rsvpDueDate: 'October 1, 2026',
 };
