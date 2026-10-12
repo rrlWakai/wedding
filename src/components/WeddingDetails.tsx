@@ -1,8 +1,8 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { MessageCircle } from 'lucide-react';
 import { useId, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react';
 import type { WeddingDetailsBlock } from '../types';
 import ScrollReveal from './ScrollReveal';
+import SectionHeading from './SectionHeading';
 import { smoothEase } from '../utils/motion';
 
 interface WeddingDetailsProps {
@@ -43,20 +43,17 @@ export default function WeddingDetails({ details }: WeddingDetailsProps) {
   };
 
   return (
-    <div className="mx-auto max-w-[1080px] py-24 lg:py-32">
+    <div className="mx-auto max-w-[1080px]">
       <div className="grid gap-y-12 lg:grid-cols-[5fr_7fr] lg:items-start lg:gap-x-20 lg:gap-y-0">
         <div className="lg:sticky lg:top-28">
-          <ScrollReveal>
-            <p className="flex items-center gap-2 text-[12px] font-medium uppercase tracking-[0.22em] text-[#5c564e]">
-              <MessageCircle size={13} strokeWidth={1.5} className="text-[#8a7a4a]" />
-              Questions
-            </p>
-            <h2 className="faq-serif mt-4 text-[clamp(3rem,12vw,4rem)] font-normal leading-[0.95] tracking-[-0.02em] text-[#1f2622] lg:text-[clamp(3.25rem,6.2vw,5.25rem)]">
-              Good to
-              <br />
-              know
-            </h2>
-            <p className="mt-7 max-w-[24ch] text-[17px] leading-[1.6] text-[#7a746c] lg:text-[18px]">
+          <SectionHeading
+            eyebrow="The Celebration"
+            script="What to know before you ask"
+            title="Wedding Details"
+            dividerClassName="w-[clamp(11.25rem,62vw,20rem)]"
+          />
+          <ScrollReveal delay={0.1}>
+            <p className="mt-6 max-w-[24ch] text-[17px] leading-[1.6] text-[#7a746c] lg:text-[18px]">
               The practical things, answered before you have to ask.
             </p>
           </ScrollReveal>

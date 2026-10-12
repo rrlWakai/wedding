@@ -1,6 +1,7 @@
 import { ArrowUpRight } from 'lucide-react';
 import type { LocationInfo } from '../types';
 import ScrollReveal from './ScrollReveal';
+import SectionHeading from './SectionHeading';
 
 interface LocationProps {
   location: LocationInfo;
@@ -27,16 +28,18 @@ export default function Location({ location }: LocationProps) {
 
       <div className="flex items-center bg-[#12110f] px-6 py-12 sm:px-10 sm:py-14 lg:px-16 lg:py-16 xl:px-20">
         <div className="w-full max-w-[560px]">
-          <ScrollReveal>
-            <p className="text-[12px] text-[#b7b1a8]">The Venue</p>
-          </ScrollReveal>
-
-          <ScrollReveal delay={0.08}>
-            <h2 className="mt-4 text-[2rem] font-normal leading-[1.15] sm:text-[2.25rem] lg:text-[2.75rem]">
-              <span className="block text-[#f5f0eb]">We&apos;ll see you at</span>
-              <span className="block text-[#c9a96a]">{location.title}</span>
-            </h2>
-          </ScrollReveal>
+          <SectionHeading
+            tone="light"
+            eyebrow="The Venue"
+            script="Join us by the sea"
+            title={
+              <>
+                <span className="block">We&apos;ll see you at</span>
+                <span className="block text-[#c9a96a]">{location.title}</span>
+              </>
+            }
+            dividerClassName="w-[clamp(11.25rem,62vw,20rem)]"
+          />
 
           <ScrollReveal delay={0.16}>
             <p className="mt-6 max-w-[34ch] text-[13px] leading-[1.7] text-[#a8a29a] lg:text-[14px]">

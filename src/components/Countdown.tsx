@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import ScrollReveal from './ScrollReveal';
-import { scrollRevealMotion, smoothEase } from '../utils/motion';
+import SectionHeading from './SectionHeading';
+import { smoothEase } from '../utils/motion';
 interface CountdownProps {
   targetDate: string;
   backgroundImage: string;
@@ -51,24 +51,33 @@ export default function Countdown({ targetDate, backgroundImage }: CountdownProp
   }, [targetDate]);
 
   return (
-    <section
-      id="countdown"
-      className="relative flex min-h-[100svh] items-end justify-center overflow-hidden text-white"
-      style={{
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-    >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(245,211,150,0.14)_0%,transparent_58%)]" />
+    <>
+      <div
+        id="countdown"
+        className="scroll-mt-20 bg-[#f5f0eb] px-6 pb-10 pt-12 sm:px-10 sm:pb-14 sm:pt-16 lg:px-20 lg:pb-16 lg:pt-20"
+      >
+        <SectionHeading
+          eyebrow="Counting Down"
+          script="December 2, 2026"
+          title="Until We Say I Do"
+          className="mx-auto max-w-3xl text-center"
+        />
+      </div>
 
-      <div className="relative w-full max-w-6xl px-5 pb-16 pt-24 sm:px-10 sm:pb-20 sm:pt-28 lg:px-20 lg:pb-24 lg:pt-32">
-        <ScrollReveal className="text-center">
-          <p className="section-eyebrow text-[#e8d3c0]/80">The Countdown to Forever</p>
-          <p className="section-script mt-3 text-[#f5d396]">December 2, 2026</p>
-         
-          <div className="theme-rounded mx-auto mt-10 max-w-4xl border border-white/15 bg-black/30 p-5 backdrop-blur-md sm:mt-14 sm:p-8 lg:p-10">
-            <div className="grid grid-cols-2 gap-5 sm:grid-cols-4 sm:gap-0">              {countdownEntries.map((entry, index) => (
+      <section
+        className="relative flex min-h-[100svh] items-end justify-center overflow-hidden text-white"
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(245,211,150,0.14)_0%,transparent_58%)]" />
+
+        <div className="relative w-full max-w-6xl px-5 pb-16 pt-24 sm:px-10 sm:pb-20 sm:pt-28 lg:px-20 lg:pb-24 lg:pt-32">
+          <div className="theme-rounded mx-auto max-w-4xl border border-white/15 bg-black/30 p-5 backdrop-blur-md sm:p-8 lg:p-10">
+            <div className="grid grid-cols-2 gap-5 sm:grid-cols-4 sm:gap-0">
+              {countdownEntries.map((entry, index) => (
                 <div key={entry.key} className="relative flex flex-col items-center">
                   {index > 0 && (
                     <span
@@ -99,8 +108,8 @@ export default function Countdown({ targetDate, backgroundImage }: CountdownProp
               ))}
             </div>
           </div>
-        </ScrollReveal>      
-      </div>
-    </section>
+        </div>
+      </section>
+    </>
   );
 }

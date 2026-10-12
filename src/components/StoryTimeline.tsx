@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 import type { TimelineEvent } from '../types';
+import SectionHeading from './SectionHeading';
 
 export default function StoryTimeline({ events }: { events: TimelineEvent[] }) {
   const sectionRef = useRef<HTMLElement>(null);
@@ -84,7 +85,7 @@ export default function StoryTimeline({ events }: { events: TimelineEvent[] }) {
   }, [build, update]);
 
   return (
-    <section id="story" ref={sectionRef} className="tl">
+    <section ref={sectionRef} className="tl">
       <svg ref={svgRef} className="tl-trail" aria-hidden="true">
         <path ref={baseRef} className="tl-base" />
         <path ref={drawRef} className="tl-draw" />
@@ -92,15 +93,16 @@ export default function StoryTimeline({ events }: { events: TimelineEvent[] }) {
       </svg>
 
       <div ref={introRef} className="tl-intro">
-        <span className="tl-script">The journey to our day</span>
-        <h2>Every chapter led us here</h2>
+        <SectionHeading
+          eyebrow="Our Story"
+          script="The journey to our day"
+          title="The Beginning of Us"
+          dividerClassName="w-[clamp(11.25rem,62vw,20rem)]"
+        />
       </div>
 
       {events.map((ev, i) => (
         <article key={i} className={`tl-chap tl-v${i % 3}`}>
-          <span className="tl-year" aria-hidden="true">
-            {ev.date.match(/\d{4}/g)?.slice(-1)[0] ?? ev.date}
-          </span>
           <figure className="tl-print">
             <span className="tl-knot" data-knot />
             <img src={ev.image} alt={ev.title} onLoad={build} />

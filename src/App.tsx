@@ -41,23 +41,23 @@ function App() {
           <HeroCarousel hero={weddingInfo.hero} />
           <AnnouncementStrip />
           <CurvedGallery />
-          <section id="story" className="bg-[#f5f0eb] px-6 py-24 sm:px-10 lg:px-20">
+          <section id="story" className="scroll-mt-20 bg-transparent px-6 py-12 sm:px-10 sm:py-16 lg:px-20 lg:py-20">
             <StoryTimeline events={weddingInfo.timeline} />
           </section>
-          <section id="gallery" className="bg-[#f5f0eb] px-6 py-24 sm:px-10 lg:px-20">
+          <section id="gallery" className="scroll-mt-20 bg-transparent px-6 py-12 sm:px-10 sm:py-16 lg:px-20 lg:py-20">
             <Gallery images={weddingInfo.gallery} />
           </section>
           <Countdown targetDate={weddingInfo.countdownDate} backgroundImage="/CountDownSection/Cd.jpg" />
-          <section id="details" className="faq-bg scroll-mt-20 px-6 py-0 sm:px-10 lg:px-20">
+          <section id="details" className="faq-bg scroll-mt-20 px-6 py-12 sm:px-10 sm:py-16 lg:px-20 lg:py-20">
             <WeddingDetails details={weddingInfo.details} />
           </section>
-          <section id="location" className="scroll-mt-[85px] bg-[#12110f] p-0 lg:scroll-mt-[73px]">
+          <section id="location" className="scroll-mt-20 bg-[#12110f] p-0">
             <Location location={weddingInfo.location} />
           </section>
-          <section className="bg-[#ebe2d8] px-6 py-24 sm:px-10 lg:px-20">
+          <section className="bg-[#ebe2d8] px-6 py-12 sm:px-10 sm:py-16 lg:px-20 lg:py-20">
             <DressCode dressCode={weddingInfo.dressCode} />
           </section>
-          <section id="rsvp" className="bg-[#f5f0eb] px-6 py-24 sm:px-10 lg:px-20">
+          <section id="rsvp" className="scroll-mt-20 bg-[#f5f0eb] px-6 py-12 sm:px-10 sm:py-16 lg:px-20 lg:py-20">
             <RSVP dueDate={weddingInfo.rsvpDueDate} />
           </section>
         </main>

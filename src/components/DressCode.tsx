@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import type { DressCodeCategory } from '../types';
 import ScrollReveal from './ScrollReveal';
-import SectionDivider from './SectionDivider';
+import SectionHeading from './SectionHeading';
 import { scrollRevealMotion } from '../utils/motion';
 interface DressCodeProps {
   dressCode: DressCodeCategory[];
@@ -10,18 +10,21 @@ interface DressCodeProps {
 export default function DressCode({ dressCode }: DressCodeProps) {
   return (
     <div className="mx-auto max-w-6xl">
-      <div className="grid gap-14 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
-        <ScrollReveal className="text-center lg:text-left">          <p className="section-eyebrow">Dress Code</p>
-          <p className="section-script mt-3">Warm, Earthy, Elegant</p>
-          <h2 className="section-title mt-4">A curated palette for the evening</h2>
-          <p className="mx-auto mt-6 max-w-xl text-base leading-8 text-[#5c4a3d] lg:mx-0">
-            Embrace textured neutrals, muted golds, and soft sunset tones that reflect the warmth of our coastal
-            celebration.
-          </p>
-          <div className="mt-8 hidden lg:block">
-            <SectionDivider />
-          </div>
-        </ScrollReveal>
+      <div className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-start lg:gap-14">
+        <div className="text-center lg:text-left">
+          <SectionHeading
+            eyebrow="Dress Code"
+            script="Warm, Earthy, Elegant"
+            title="A curated palette for the evening"
+            dividerClassName="mx-auto w-[clamp(11.25rem,62vw,20rem)] lg:mx-0"
+          />
+          <ScrollReveal delay={0.1}>
+            <p className="mx-auto mt-6 max-w-xl text-base leading-8 text-[#5c4a3d] lg:mx-0">
+              Embrace textured neutrals, muted golds, and soft sunset tones that reflect the warmth of our coastal
+              celebration.
+            </p>
+          </ScrollReveal>
+        </div>
         <div className="space-y-6">
           {dressCode.map((item, index) => (
             <motion.div

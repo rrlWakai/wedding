@@ -78,26 +78,61 @@ h6 {
 }
 
 .section-eyebrow {
-  font-size: 0.75rem;
-  letter-spacing: 0.4em;
+  font-size: clamp(0.5625rem, 0.32rem + 0.55vw, 0.6875rem);
+  font-weight: 500;
+  letter-spacing: 0.34em;
   text-transform: uppercase;
-  color: #8a735c;
+  color: #8a6b54;
 }
 
 .section-script {
   font-family: 'Great Vibes', cursive;
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
-  line-height: 1.2;
-  color: #c5a059;
+  font-size: clamp(1.5rem, 1.1rem + 2.1vw, 2.375rem);
+  font-weight: 400;
+  line-height: 1.25;
+  color: #c9a052;
 }
 
 .section-title {
   font-family: 'Playfair Display', Georgia, serif;
-  font-size: clamp(2.5rem, 5vw, 3.75rem);
-  font-weight: 600;
+  font-size: clamp(2.25rem, 1.35rem + 4vw, 3.75rem);
+  font-weight: 700;
   line-height: 1.1;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
   color: #3d2b1f;
+}
+
+/* ---- Section heading (eyebrow / script / title / divider) ----
+   Spacing between the stacked lines. Kept in unlayered CSS so it is
+   deterministic, and separate from the wrapper so consumers can control
+   text alignment and the trailing gap with utilities. */
+.sh-script-row {
+  margin-top: 0.625rem;  /* ~10px eyebrow -> script */
+}
+
+.sh-title-row {
+  margin-top: 0.875rem;  /* ~14px script -> title (or eyebrow -> title) */
+}
+
+.sh-divider-row {
+  margin-top: 1.875rem;  /* ~30px title -> divider */
+}
+
+/* Light-on-dark tone for headings placed over photos or dark panels. */
+.section-eyebrow--light {
+  color: #d8cdbd;
+}
+
+.section-script--light {
+  color: #f5d396;
+}
+
+.sh-light .section-eyebrow {
+  color: #d8cdbd;
+}
+
+.sh-light .section-title {
+  color: #f5f0eb;
 }
 
 .theme-card {
@@ -197,11 +232,6 @@ h6 {
 /* ---- FAQ (Good to know) ---- */
 .faq-bg {
   background-color: #e8e0d6;
-  background-image: repeating-linear-gradient(
-    135deg,
-    rgb(120 105 85 / 0.035) 0 1px,
-    transparent 1px 4px
-  );
 }
 
 .faq-serif {
@@ -223,11 +253,8 @@ h6 {
 }
 
 /* ---- Freeform timeline ---- */
-.tl{--tl-gold:var(--gold,#B79A5B);--tl-gold-text:var(--gold-text,#7A6330);--tl-ink:var(--ink,#23363D);--tl-soft:var(--soft,#566a70);--tl-paper:#FAFBFA;--tl-shadow:var(--shadow,rgba(25,45,52,.3));position:relative;max-width:1120px;margin:0 auto;padding:clamp(5rem,10vw,9rem) clamp(1.2rem,4vw,2.5rem) 6rem}
-.tl-script{font-family:'Pinyon Script',cursive;color:var(--tl-gold-text);line-height:1.1}
-.tl-intro{max-width:30rem;margin:0 0 clamp(3rem,7vw,6rem) clamp(0rem,8vw,6rem)}
-.tl-intro .tl-script{font-size:clamp(1.9rem,4vw,2.6rem)}
-.tl-intro h2{font-size:clamp(2rem,4.6vw,3.2rem);margin:.4rem 0 0}
+.tl{--tl-gold:var(--gold,#B79A5B);--tl-gold-text:var(--gold-text,#7A6330);--tl-ink:var(--ink,#23363D);--tl-soft:var(--soft,#566a70);--tl-paper:#FAFBFA;--tl-shadow:var(--shadow,rgba(25,45,52,.3));position:relative;max-width:1120px;margin:0 auto;padding:0}
+.tl-intro{max-width:34rem;margin:0 0 clamp(2rem,5vw,3rem) clamp(0rem,4vw,3rem)}
 .tl-trail{position:absolute;left:0;top:0;width:100%;pointer-events:none;overflow:visible;z-index:0}
 .tl-base{fill:none;stroke:var(--tl-gold);stroke-width:1.4;stroke-dasharray:2 9;stroke-linecap:round;opacity:.55}
 .tl-draw{fill:none;stroke:var(--tl-gold);stroke-width:2;stroke-linecap:round}
@@ -238,7 +265,6 @@ h6 {
 .tl-print figcaption{font-family:'Pinyon Script',cursive;font-size:1.5rem;color:#4a6269;text-align:center;padding:.5rem .5rem .7rem;line-height:1.2}
 .tl-print::before{content:"";position:absolute;top:-.9rem;left:50%;width:5.2rem;height:1.7rem;transform:translateX(-50%) rotate(var(--tape,-4deg));background:rgba(95,127,107,.5);box-shadow:0 1px 2px rgba(0,0,0,.12)}
 .tl-knot{position:absolute;width:12px;height:12px;border-radius:50%;background:var(--tl-gold);box-shadow:0 0 0 5px rgba(183,154,91,.28)}
-.tl-year{position:absolute;z-index:-1;font-family:'Playfair Display',serif;font-size:clamp(6rem,15vw,13rem);line-height:.8;color:var(--tl-gold);opacity:.2;letter-spacing:-.04em;user-select:none}
 .tl-words{position:relative}
 .tl-words .tl-date{font-size:clamp(1.6rem,3vw,2.1rem)}
 .tl-words h3{font-size:clamp(1.9rem,3.6vw,2.7rem);margin:.15rem 0 .8rem}
@@ -249,32 +275,27 @@ h6 {
 .tl-v0 .tl-print{grid-column:1/6;grid-row:1;transform:rotate(-3deg)}
 .tl-v0 .tl-words{grid-column:7/12;grid-row:1;margin-top:7rem}
 .tl-v0 .tl-knot{top:-6px;right:12%}
-.tl-v0 .tl-year{left:-3%;top:-2.2rem}
 /* variant 1: text left, photo right and pulled up */
 .tl-v1{margin-top:-1rem}
 .tl-v1 .tl-words{grid-column:1/7;grid-row:1;margin-top:2rem;padding-left:clamp(0rem,6vw,5rem)}
 .tl-v1 .tl-print{grid-column:8/13;grid-row:1;margin-top:-4rem;transform:rotate(2.6deg);--tape:6deg}
 .tl-v1 .tl-knot{bottom:34%;left:-6px}
-.tl-v1 .tl-year{right:-4%;bottom:-3rem}
 .tl-v1 .tl-aside{grid-column:2/6;grid-row:1;align-self:end;margin-bottom:-6rem}
 /* variant 2: smaller photo, text far right and low */
-.tl-v2{margin-top:9rem}
+.tl-v2{margin-top:7rem}
 .tl-v2 .tl-print{grid-column:3/7;grid-row:1;margin-top:1rem;transform:rotate(-2deg)}
 .tl-v2 .tl-print img{aspect-ratio:1/1.05}
 .tl-v2 .tl-words{grid-column:8/13;grid-row:1;margin-top:11rem}
 .tl-v2 .tl-knot{top:42%;right:-6px}
-.tl-v2 .tl-year{left:34%;top:-4rem;font-family:'Playfair Display',cursive;font-size:clamp(6rem,16vw,13rem);letter-spacing:0}
 
 @media(max-width:760px){
   .tl-chap{display:flex;flex-direction:column}
-  .tl-chap+.tl-chap{margin-top:5.5rem}
+  .tl-chap+.tl-chap{margin-top:4rem}
   .tl-print{width:76%}
   .tl-v0 .tl-print{transform:rotate(-2.5deg)}
   .tl-v1 .tl-print{margin:0 0 0 auto;transform:rotate(2.5deg);order:-1}
   .tl-v2 .tl-print{margin:0 0 0 12%}
   .tl-words,.tl-v0 .tl-words,.tl-v1 .tl-words,.tl-v2 .tl-words{margin-top:2.2rem;padding:0 0 0 .4rem}
   .tl-aside{display:none}
-  .tl-v0 .tl-year{top:-3rem}
-  .tl-v2 .tl-year{left:40%;top:-3rem}
 }
 @media (prefers-reduced-motion:reduce){.tl-walker{display:none}}

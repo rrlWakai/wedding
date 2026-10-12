@@ -1,8 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { type FormEvent, useState } from 'react';
 import type { RSVPFormData } from '../types';
-import ScrollReveal from './ScrollReveal';
-import SectionDivider from './SectionDivider';
+import SectionHeading from './SectionHeading';
 import { scrollRevealMotion } from '../utils/motion';
 
 interface RSVPProps {
@@ -13,7 +12,6 @@ const initialForm: RSVPFormData = {
   name: '',
   email: '',
   attendance: '',
-  guests: '1',
   message: '',
 };
 
@@ -47,14 +45,12 @@ export default function RSVP({ dueDate }: RSVPProps) {
 
   return (
     <div className="mx-auto max-w-4xl">
-      <ScrollReveal className="mb-12 text-center">
-        <p className="section-eyebrow">Kindly Respond</p>
-        <p className="section-script mt-3">We hope to see you there</p>
-        <h2 className="section-title mt-4">Please RSVP by {dueDate}</h2>
-        <div className="mt-8">
-          <SectionDivider />
-        </div>
-      </ScrollReveal>
+      <SectionHeading
+        eyebrow="Kindly Respond"
+        script={`Kindly reply by ${dueDate}`}
+        title="Will You Join Us?"
+        className="mx-auto mb-8 max-w-2xl text-center sm:mb-10 lg:mb-12"
+      />
       <AnimatePresence mode="wait">
         {submitted ? (
           <motion.div
@@ -99,48 +95,34 @@ export default function RSVP({ dueDate }: RSVPProps) {
               </label>
             </div>
 
-            <div className="grid gap-8 md:grid-cols-2">
-              <fieldset className="space-y-4">
-                <legend className="text-xs uppercase tracking-[0.32em] text-[#8a735c]">Attendance</legend>
-                <div className="space-y-3">
-                  <label className="flex items-center gap-3 text-[#5c4a3d]">
-                    <input
-                      type="radio"
-                      name="attendance"
-                      value="yes"
-                      checked={form.attendance === 'yes'}
-                      onChange={(event) => handleChange('attendance', event.target.value)}
-                      className="h-4 w-4 border-[#6f4c2e] text-[#6f4c2e] focus:ring-[#6f4c2e]"
-                    />
-                    Delighted to attend
-                  </label>
-                  <label className="flex items-center gap-3 text-[#5c4a3d]">
-                    <input
-                      type="radio"
-                      name="attendance"
-                      value="no"
-                      checked={form.attendance === 'no'}
-                      onChange={(event) => handleChange('attendance', event.target.value)}
-                      className="h-4 w-4 border-[#6f4c2e] text-[#6f4c2e] focus:ring-[#6f4c2e]"
-                    />
-                    Regretfully decline
-                  </label>
-                </div>
-                {errors.attendance && <span className="text-sm text-[#ba1a1a]">{errors.attendance}</span>}
-              </fieldset>
-              <label className="space-y-3">
-                <span className="block text-xs uppercase tracking-[0.32em] text-[#8a735c]">Number of Guests</span>
-                <select
-                  value={form.guests}
-                  onChange={(event) => handleChange('guests', event.target.value)}
-                  className="w-full border-b border-[#d9c5b2] bg-transparent py-3 text-base text-[#3d2b1f] outline-none focus:border-[#6f4c2e]"
-                >
-                  <option value="1">1 Guest</option>
-                  <option value="2">2 Guests</option>
-                  <option value="3">3 Guests</option>
-                </select>
-              </label>
-            </div>
+            <fieldset className="space-y-4">
+              <legend className="text-xs uppercase tracking-[0.32em] text-[#8a735c]">Attendance</legend>
+              <div className="space-y-3">
+                <label className="flex items-center gap-3 text-[#5c4a3d]">
+                  <input
+                    type="radio"
+                    name="attendance"
+                    value="yes"
+                    checked={form.attendance === 'yes'}
+                    onChange={(event) => handleChange('attendance', event.target.value)}
+                    className="h-4 w-4 border-[#6f4c2e] text-[#6f4c2e] focus:ring-[#6f4c2e]"
+                  />
+                  Delighted to attend
+                </label>
+                <label className="flex items-center gap-3 text-[#5c4a3d]">
+                  <input
+                    type="radio"
+                    name="attendance"
+                    value="no"
+                    checked={form.attendance === 'no'}
+                    onChange={(event) => handleChange('attendance', event.target.value)}
+                    className="h-4 w-4 border-[#6f4c2e] text-[#6f4c2e] focus:ring-[#6f4c2e]"
+                  />
+                  Regretfully decline
+                </label>
+              </div>
+              {errors.attendance && <span className="text-sm text-[#ba1a1a]">{errors.attendance}</span>}
+            </fieldset>
 
             <label className="space-y-3">
               <span className="block text-xs uppercase tracking-[0.32em] text-[#8a735c]">A Message for the Couple</span>

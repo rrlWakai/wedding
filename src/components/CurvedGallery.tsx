@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { inviteImages } from '../data/invite';
+import ScrollReveal from './ScrollReveal';
+import SectionHeading from './SectionHeading';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Layout constants. Everything that must track the stage width is a fraction.
@@ -429,19 +431,21 @@ export default function CurvedGallery() {
       aria-label="Photo gallery"
     >
       <div className="gal-head">
-        <p className="gal-eyebrow">Our Moments</p>
-        <svg className="gal-orn" viewBox="0 0 220 20" aria-hidden="true" focusable="false">
-          <line className="gal-orn-line" x1="0"   y1="10" x2="82"  y2="10" />
-          <line className="gal-orn-line" x1="138" y1="10" x2="220" y2="10" />
-          <path className="gal-orn-diamond" d="M110 2.5 117.5 10 110 17.5 102.5 10Z" />
-          <circle className="gal-orn-core" cx="110" cy="10" r="2.3" />
-        </svg>
-        <h2 className="gal-script">Moments we&rsquo;ll treasure forever</h2>
-        <p className="gal-lead">
-          We&rsquo;re getting married! Join us this December. Explore our story, the venue, dress
-          code, and RSVP details to celebrate our special day together.
-        </p>
-        <a className="gal-btn" href="#rsvp">RSVP Now</a>
+        <SectionHeading
+          eyebrow="Our Moments"
+          script="A story told in light"
+          title="Moments We&rsquo;ll Treasure Forever"
+          className="mx-auto"
+        />
+        <ScrollReveal delay={0.24} y={16}>
+          <p className="gal-lead">
+            We&rsquo;re getting married! Join us this December. Explore our story, the venue, dress
+            code, and RSVP details to celebrate our special day together.
+          </p>
+        </ScrollReveal>
+        <ScrollReveal delay={0.32} y={16}>
+          <a className="gal-btn" href="#rsvp">RSVP Now</a>
+        </ScrollReveal>
       </div>
 
       {ready &&

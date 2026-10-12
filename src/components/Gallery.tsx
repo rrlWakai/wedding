@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 import type { GalleryImage } from '../types';
-import ScrollReveal from './ScrollReveal';
-import SectionDivider from './SectionDivider';
+import SectionHeading from './SectionHeading';
 import { scrollRevealMotion } from '../utils/motion';
 interface GalleryProps {
   images: GalleryImage[];
@@ -10,14 +9,12 @@ interface GalleryProps {
 export default function Gallery({ images }: GalleryProps) {
   return (
     <div className="mx-auto max-w-6xl">
-      <ScrollReveal className="mb-16 text-center">
-        <p className="section-eyebrow">Our Memories</p>
-        <p className="section-script mt-3">Quiet moments along the coast</p>
-        <h2 className="section-title mt-4">Captured in golden light</h2>
-        <div className="mt-8">
-          <SectionDivider />
-        </div>
-      </ScrollReveal>
+      <SectionHeading
+        eyebrow="Our Memories"
+        script="Quiet moments along the coast"
+        title="Captured in golden light"
+        className="mx-auto mb-8 max-w-2xl text-center sm:mb-10 lg:mb-12"
+      />
       <div className="grid gap-6 sm:grid-cols-2 sm:gap-8 xl:grid-cols-3">
         {images.map((image, index) => (
           <motion.figure
