@@ -28,26 +28,65 @@ export const weddingInfo: WeddingInfo = {
   countdownDate: '2026-12-02T00:00:00',
   timeline: timelineEvents,
 
-  details: [
-    {
-      id: 'detail-1',
-      title: 'The Ceremony',
-      subtitle: 'The Sands at Sunset Cliff',
-      time: '4:00 PM',
-      location: 'Malibu, California',
-      note: 'Attire: Coastal Black Tie',
-      icon: 'Calendar',
-    },
-    {
-      id: 'detail-2',
-      title: 'The Reception',
-      subtitle: 'The Azure Shore Estate',
-      time: '6:30 PM',
-      location: 'Private beach access provided',
-      note: 'Dinner, drinks & dancing to follow',
-      icon: 'Heart',
-    },
-  ],
+  details: {
+    items: [
+      {
+        id: 'detail-1',
+        title: 'The Ceremony',
+        subtitle: 'The Sands at Sunset Cliff',
+        time: '4:00 PM',
+        location: 'Malibu, California',
+        note: 'Attire: Coastal Black Tie',
+        icon: 'Calendar',
+      },
+      {
+        id: 'detail-2',
+        title: 'The Reception',
+        subtitle: 'The Azure Shore Estate',
+        time: '6:30 PM',
+        location: 'Private beach access provided',
+        note: 'Dinner, drinks & dancing to follow',
+        icon: 'Heart',
+      },
+    ],
+    faqs: [
+      {
+        question: 'Can I bring a plus-one?',
+        answer:
+          'Please check your invitation, or message us and we\u2019ll be happy to help.',
+      },
+      {
+        question: 'Are children welcome?',
+        answer:
+          'Please check your invitation, or message us and we\u2019ll be happy to help.',
+      },
+      {
+        question: 'How do we get there?',
+        answer:
+          'The celebration takes place at The Azure Shore Estate, 1024 Coast Highway in Malibu, CA. Valet parking is provided at the main gate, and a shuttle will be available from local hotels about an hour before the ceremony.',
+      },
+      {
+        question: 'Where should we stay?',
+        answer:
+          'Please check the travel section on your invitation, or message us and we\u2019ll be happy to help.',
+      },
+      {
+        question: 'What about gifts?',
+        answer:
+          'Please check your invitation, or message us and we\u2019ll be happy to help.',
+      },
+      {
+        question: 'When and where is the ceremony?',
+        answer:
+          'The ceremony begins at 4:00 PM at The Sands at Sunset Cliff in Malibu, California. Attire is Coastal Black Tie.',
+      },
+      {
+        question: 'What is the schedule on the day?',
+        answer:
+          'The ceremony starts at 4:00 PM. The reception follows at 6:30 PM at The Azure Shore Estate, with private beach access, dinner, drinks and dancing. We\u2019d love your RSVP by October 1, 2026.',
+      },
+    ],
+  },
   dressCode: [
     {
       id: 'code-1',

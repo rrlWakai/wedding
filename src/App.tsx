@@ -12,6 +12,7 @@ import Footer from './components/Footer';
 import { weddingInfo } from './data/wedding';
 import AnnouncementStrip from './components/AnnouncementStrip';
 import CurvedGallery from './components/CurvedGallery';
+import Preloader from './components/Preloader';
 
 const pageVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -21,7 +22,12 @@ const pageVariants = {
 
 function App() {
   return (
-    <AnimatePresence mode="wait">
+    <>
+      <Preloader
+        names={weddingInfo.hero.heading}
+        imageToPreload={weddingInfo.hero.slides[0].image}
+      />
+      <AnimatePresence mode="wait">
       <motion.div
         className="min-h-screen bg-[#f5f0eb] text-[#3d2b1f]"
         variants={pageVariants}
@@ -42,7 +48,7 @@ function App() {
             <Gallery images={weddingInfo.gallery} />
           </section>
           <Countdown targetDate={weddingInfo.countdownDate} backgroundImage="/CountDownSection/Cd.jpg" />
-          <section id="details" className="bg-[#f5f0eb] px-6 py-24 sm:px-10 lg:px-20">
+          <section id="details" className="faq-bg scroll-mt-20 px-6 py-0 sm:px-10 lg:px-20">
             <WeddingDetails details={weddingInfo.details} />
           </section>
           <section id="location" className="scroll-mt-[85px] bg-[#12110f] p-0 lg:scroll-mt-[73px]">
@@ -58,6 +64,7 @@ function App() {
         <Footer />
       </motion.div>
     </AnimatePresence>
+    </>
   );
 }
 

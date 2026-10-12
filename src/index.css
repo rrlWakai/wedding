@@ -152,6 +152,38 @@ h6 {
   border-color: rgb(245 211 150 / 0.85);
 }
 
+/* ---- Preloader ---- */
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f0eb;
+}
+
+@keyframes preloader-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Each glyph contour is normalized to a length of 1 via the pathLength
+   attribute, so dasharray/dashoffset of 1 cover the full path. The base rule
+   keeps every stroke fully hidden (dashoffset 1) from the very first paint,
+   before any animation frame runs, and `animation-fill-mode: both` holds that
+   hidden state through each stroke's delay. Duration must match
+   STROKE_DURATION in Preloader.tsx. */
+.preloader-stroke {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: preloader-draw 0.4s cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+
 .loc-btn {
   border-radius: 2px;
   background-color: var(--sage);
@@ -160,6 +192,20 @@ h6 {
 
 .loc-btn:hover {
   background-color: #526b59;
+}
+
+/* ---- FAQ (Good to know) ---- */
+.faq-bg {
+  background-color: #e8e0d6;
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgb(120 105 85 / 0.035) 0 1px,
+    transparent 1px 4px
+  );
+}
+
+.faq-serif {
+  font-family: 'Bodoni Moda', 'Playfair Display', Georgia, serif;
 }
 
 @media (prefers-reduced-motion: reduce) {

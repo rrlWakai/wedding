@@ -32,6 +32,16 @@ export interface WeddingDetail {
   icon: 'Calendar' | 'Clock' | 'Heart' | 'Users';
 }
 
+export interface WeddingFaq {
+  question: string;
+  answer: string;
+}
+
+export interface WeddingDetailsBlock {
+  items: WeddingDetail[];
+  faqs?: WeddingFaq[];
+}
+
 export interface DressCodeCategory {
   id: string;
   title: string;
@@ -72,7 +82,7 @@ export interface WeddingInfo {
   countdownDate: string;
   timeline: TimelineEvent[];
 
-  details: WeddingDetail[];
+  details: WeddingDetailsBlock;
   dressCode: DressCodeCategory[];
   location: LocationInfo;
   gallery: GalleryImage[];

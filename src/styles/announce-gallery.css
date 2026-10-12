@@ -270,7 +270,20 @@
   width: 100%;
   overflow-x: clip;
   overflow-y: visible;
-  padding-block: 28px;
+  padding-block: 12px;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.gal-viewport.is-dragging {
+  cursor: grabbing;
+}
+
+.gal-viewport:focus-visible {
+  outline: 2px solid var(--muted-gold);
+  outline-offset: -2px;
 }
 
 /* ── Stage: 3D container ───────────────────────────────────────────────── */
