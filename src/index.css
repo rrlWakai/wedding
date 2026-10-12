@@ -221,12 +221,12 @@ h6 {
 
 .loc-btn {
   border-radius: 2px;
-  background-color: var(--sage);
+  background-color: var(--earth-brown);
   transition: background-color 200ms ease;
 }
 
 .loc-btn:hover {
-  background-color: #526b59;
+  background-color: #5a3d25;
 }
 
 /* The split venue panels sit on the warmer beige surface, so the small
