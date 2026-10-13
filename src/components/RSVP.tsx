@@ -15,14 +15,21 @@ const initialForm: RSVPFormData = {
   message: '',
 };
 
+const RSVP_SCRIPT_URL = import.meta.env.VITE_RSVP_SCRIPT_URL as string | undefined;
+
+type SubmitStatus = 'idle' | 'sending' | 'error';
+
 export default function RSVP({ dueDate }: RSVPProps) {
   const [form, setForm] = useState<RSVPFormData>(initialForm);
   const [errors, setErrors] = useState<Partial<Record<keyof RSVPFormData, string>>>({});
   const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<SubmitStatus>('idle');
+  const [honeypot, setHoneypot] = useState('');
 
   const handleChange = (field: keyof RSVPFormData, value: string) => {
     setForm((current) => ({ ...current, [field]: value }));
     setErrors((current) => ({ ...current, [field]: undefined }));
+    if (status === 'error') setStatus('idle');
   };
 
   const validate = () => {
@@ -33,14 +40,45 @@ export default function RSVP({ dueDate }: RSVPProps) {
     return nextErrors;
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (status === 'sending') return;
+
     const nextErrors = validate();
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
       return;
     }
-    setSubmitted(true);
+
+    if (honeypot.trim()) {
+      setSubmitted(true);
+      return;
+    }
+
+    if (!RSVP_SCRIPT_URL) {
+      setStatus('error');
+      return;
+    }
+
+    const payload = {
+      name: form.name.trim(),
+      email: form.email.trim(),
+      attendance: form.attendance === 'yes' ? 'Attending' : 'Declined',
+      message: form.message.trim(),
+    };
+
+    setStatus('sending');
+    try {
+      await fetch(RSVP_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(payload),
+      });
+      setSubmitted(true);
+    } catch {
+      setStatus('error');
+    }
   };
 
   return (
@@ -72,6 +110,18 @@ export default function RSVP({ dueDate }: RSVPProps) {
             className="theme-card space-y-8 p-6 sm:space-y-10 sm:p-10"
             onSubmit={handleSubmit}
           >
+            <div className="absolute -left-[9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
+              <label>
+                Leave this field empty
+                <input
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={honeypot}
+                  onChange={(event) => setHoneypot(event.target.value)}
+                />
+              </label>
+            </div>
             <div className="grid gap-8 md:grid-cols-2">
               <label className="space-y-3">
                 <span className="block text-xs uppercase tracking-[0.32em] text-[#8a735c]">Full Name</span>
@@ -134,9 +184,14 @@ export default function RSVP({ dueDate }: RSVPProps) {
               />
             </label>
 
-            <button type="submit" className="theme-btn-primary w-full">
-              Submit RSVP
+            <button type="submit" className="theme-btn-primary w-full" disabled={status === 'sending'}>
+              {status === 'sending' ? 'Sending...' : 'Submit RSVP'}
             </button>
+            {status === 'error' && (
+              <p role="alert" className="text-sm text-[#ba1a1a]">
+                Something went wrong sending your RSVP. Please try again.
+              </p>
+            )}
           </motion.form>
         )}
       </AnimatePresence>
