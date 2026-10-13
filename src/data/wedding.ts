@@ -75,16 +75,6 @@ export const weddingInfo: WeddingInfo = {
         answer:
           'Please check your invitation, or message us and we\u2019ll be happy to help.',
       },
-      {
-        question: 'When and where is the ceremony?',
-        answer:
-          'The ceremony begins at 4:00 PM at The Sands at Sunset Cliff in Malibu, California. Attire is Coastal Black Tie.',
-      },
-      {
-        question: 'What is the schedule on the day?',
-        answer:
-          'The ceremony starts at 4:00 PM. The reception follows at 6:30 PM at The Azure Shore Estate, with private beach access, dinner, drinks and dancing. We\u2019d love your RSVP by October 1, 2026.',
-      },
     ],
   },
   dressCode: [
