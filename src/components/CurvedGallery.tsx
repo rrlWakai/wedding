@@ -13,9 +13,6 @@ const MIN_SLOTS = 9;
 /** Perspective distance = 0.75 × stage width. */
 const PERSPECTIVE_FRAC = 0.75;
 
-/** Centre recess = 0.075 × stage width (z = -D·(1 − u²)). */
-const DEPTH_FRAC = 0.075;
-
 /** u = t / (0.55 × stage width). */
 const HALF_SPAN_FRAC = 0.55;
 
@@ -33,21 +30,29 @@ const DRAG_GAIN = 1.0;
 const FLICK_MAX_FRAC = 1.2;
 
 /** Desktop layout (stage width ≥ 760px). */
-const DESKTOP = { spacing: 0.22, item: 0.21, tilt: 18 };
+const DESKTOP = { spacing: 0.22, item: 0.21 };
 
 /** Mobile layout (stage width < 760px). */
-const MOBILE = { spacing: 0.36, item: 0.34, tilt: 16 };
+const MOBILE = { spacing: 0.36, item: 0.34 };
 
 /**
  * Two counter-drifting ribbons. direction +1 = photos drift LEFT (offset
  * grows), −1 = photos drift RIGHT (offset shrinks). speed is a fraction of
  * stage width per second — 0.022 ≈ one photo pitch (~0.22·W) every 10s on
  * desktop; setting speed to 0 freezes a row's auto drift while keeping drag.
+ *
+ * depthFrac is a fraction of stage width and is SIGNED. Positive means the centre is recessed (concave). Negative means the centre bulges toward the viewer (convex).
+ * tilt and tiltMobile are the rotateY degrees at |u| = 1 on desktop and mobile.
  */
 const ROWS = [
-  { id: 'a', direction: +1, speed: 0.022, imageShift: 0, reverse: false, startOffsetSlots: 0 },
-  { id: 'b', direction: -1, speed: 0.016, imageShift: 4, reverse: false, startOffsetSlots: 0.5 },
+  { id: 'a', direction: +1, speed: 0.022, imageShift: 0, reverse: false, startOffsetSlots: 0,   depthFrac:  0.16, tilt: 20, tiltMobile: 17, spacingScale: 1 },
+  { id: 'b', direction: -1, speed: 0.016, imageShift: 4, reverse: false, startOffsetSlots: 0.5, depthFrac: -0.10, tilt: 16, tiltMobile: 13, spacingScale: 1 },
 ] as const;
+
+/** Base viewport padding in px */
+const VERTICAL_PAD = 12;
+/** The fraction of row B's growth padding pulled back with a negative margin */
+const ROW_OVERLAP_K = 0.8;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Helpers
@@ -82,7 +87,7 @@ interface RowState {
   spacing: number;         // px between slot centres
   itemW: number;           // px photo width
   span: number;            // px half-span for the u profile
-  depth: number;           // px centre recess
+  depth: number;           // px centre recess (signed)
   tilt: number;            // deg at |u| = 1
   pxPerSec: number;        // signed base drift, px/s (auto, not during drag)
   stageW: number;          // px stage/viewport width
@@ -185,13 +190,13 @@ export default function CurvedGallery() {
     //   centreIndex = (slotCount - 1) / 2
     //   t           = wrapCenter((i - centreIndex)*spacing - offset, period)
     //   u           = clamp(t / span, -1, 1)
-    //   z           = -depth * (1 - u*u)          centre farthest, edges at 0
-    //   tilt        = -tiltMax * u                decoupled from depth
+    //   z           = -depth * (1 - u*u)
+    //   tilt        = depends on depth sign
     //
-    // Tilt sign: CSS positive rotateY pushes a photo's right edge away from the
-    // viewer. A photo on the right (u > 0) must rotate negative so its outer
-    // (right) edge comes forward and its inner edge stays back; the left side
-    // mirrors this. Hence tilt = -tiltMax * u.
+    // Tilt sign: In CSS, positive rotateY pushes an element's right edge AWAY from the viewer.
+    // - Concave (A, depth>0): a right-side photo (u > 0) needs its outer (right) edge closer, so its tilt is negative: -tiltMax*u.
+    // - Convex (B, depth<0): a right-side photo needs its outer (right) edge farther away, so its tilt is positive: +tiltMax*u.
+    // The left side mirrors each case.
     // ─────────────────────────────────────────────────────────────────────
     const applyRowFrame = (i: number) => {
       const rs = rowStates.current[i];
@@ -214,7 +219,8 @@ export default function CurvedGallery() {
         const t     = wrapCenter(slotX - offset, period);
         const u     = clamp(t / span, -1, 1);
         const z     = -depth * (1 - u * u);
-        const tilt  = -tiltMax * u;
+        const sign  = depth >= 0 ? 1 : -1;
+        const tilt  = -sign * tiltMax * u;
 
         figure.style.transform =
           `translate3d(calc(-50% + ${t.toFixed(2)}px), -50%, ${z.toFixed(2)}px) ` +
@@ -233,16 +239,21 @@ export default function CurvedGallery() {
       const w = probe.clientWidth;
       if (!w) return;
       const cfg = w < 760 ? MOBILE : DESKTOP;
-
-      const spacing = w * cfg.spacing;
-      const itemW   = w * cfg.item;
       const span    = w * HALF_SPAN_FRAC;
-      const depth   = w * DEPTH_FRAC;
-      const tilt    = cfg.tilt;
+      const P       = w * PERSPECTIVE_FRAC;
 
       for (let i = 0; i < ROWS.length; i++) {
         const rs = rowStates.current[i];
         const row = ROWS[i];
+
+        const depth   = w * row.depthFrac;                      // signed
+        const tilt    = w < 760 ? row.tiltMobile : row.tilt;
+        const spacing = w * cfg.spacing * row.spacingScale;
+        const itemW   = w * cfg.item;
+
+        if (import.meta.env.DEV && Math.abs(depth) > 0.5 * P) {
+          console.warn('CurvedGallery: |depth| is too large for the perspective');
+        }
 
         rs.spacing  = spacing;
         rs.itemW    = itemW;
@@ -257,8 +268,21 @@ export default function CurvedGallery() {
           rs.initOffset = false;
         }
 
+        const itemH = itemW * 4 / 3;
+        const growth = depth < 0 ? P / (P + depth) : 1;       // = P/(P - |depth|), about 1.15 for row B
+        const growthPad = itemH * (growth - 1) / 2;
+
         const vp = viewportRefs.current[i];
-        if (vp) vp.style.perspective = `${w * PERSPECTIVE_FRAC}px`;
+        if (vp) {
+          vp.style.perspective = `${P}px`;
+          if (i === 0) {
+            vp.style.paddingBlock = VERTICAL_PAD + 'px';
+            vp.style.marginTop = '0px';
+          } else {
+            vp.style.paddingBlock = (growthPad + VERTICAL_PAD) + 'px';
+            vp.style.marginTop = (-ROW_OVERLAP_K * growthPad) + 'px';
+          }
+        }
 
         const stage = stageRefs.current[i];
         if (stage) stage.style.height = `${itemW * (4 / 3)}px`;
