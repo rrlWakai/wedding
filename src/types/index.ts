@@ -22,24 +22,9 @@ export interface TimelineEvent {
   aside?: string;
 }
 
-export interface WeddingDetail {
-  id: string;
-  title: string;
-  subtitle: string;
-  time: string;
-  location: string;
-  note: string;
-  icon: 'Calendar' | 'Clock' | 'Heart' | 'Users';
-}
-
 export interface WeddingFaq {
   question: string;
   answer: string;
-}
-
-export interface WeddingDetailsBlock {
-  items: WeddingDetail[];
-  faqs?: WeddingFaq[];
 }
 
 export interface DressCodeCategory {
@@ -83,8 +68,6 @@ export interface WeddingInfo {
   hero: HeroContent;
   countdownDate: string;
   timeline: TimelineEvent[];
-
-  details: WeddingDetailsBlock;
   dressCode: DressCodeCategory[];
   locations: LocationInfo[];
   gallery: GalleryImage[];

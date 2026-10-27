@@ -1,35 +1,49 @@
-
 import type { TimelineEvent } from '../types';
 
 export const timelineEvents: TimelineEvent[] = [
   {
     id: 'timeline-1',
-    date: 'Summer 2018',
+    date: '2013',
     title: 'How We Met',
     description:
-      "A chance meeting at a coastal bookstore in Malibu turned into a five-hour conversation over espresso and the smell of old paper. We discovered a shared love for warm light, quiet beaches, and slow afternoons.",
-    image:
-      '/StorySection/Story1.jpg',
-      caption: 'a bookstore in Malibu',
+      'It all began at a Youth Festival in 2013. He asked for my number, and what seemed like a simple moment became the beginning of our story. We started talking, slowly getting to know each other, never imagining that this little connection would one day lead us here.',
+    image: '/StorySection/Story1.jpg',
+    caption: 'The first step of our story',
   },
   {
     id: 'timeline-2',
-    date: '2019 - 2024',
-    title: 'Our Journey',
+    date: '2013',
+    title: 'Young and Still Learning',
     description:
-      'From cross-country road trips to quiet weekends in the garden, we built a life centered around peace, creativity, and the simple joy of each other’s company. Every day felt like a chapter in a coastal story.',
-    image:
-      '/StorySection/story2.jpg',
-      caption: 'barefoot, as usual',
-      aside: 'always the long way home',
+      "That same year, we gave our young love a chance. But back then, we were still learning about love and what it meant to be in a relationship. We had our share of breakups and reconciliations, often finding our way back to each other, only to part ways again. Perhaps the timing wasn't right, but somehow, our story never truly ended.",
+    image: '/StorySection/story2.jpg',
+    caption: 'Learning and growing together',
   },
   {
     id: 'timeline-3',
-    date: 'October 2025',
-    title: 'The Proposal',
+    date: '2021',
+    title: 'Finding Our Way Back',
     description:
-      'Under a canopy of stars on the same beach where our first date began, Jerico asked the question that changed everything. Quiet, perfect, and intimate—just our kind of forever.',
+      'After years of life taking us in different directions, we found ourselves talking again in 2021. Maybe some connections are simply too special to be forgotten. Once again, our story began to unfold, giving us another chance to discover what we could become together.',
     image: '/StorySection/story3.jpg',
-      caption: 'yes, a thousand times',
+    caption: 'A second chance at forever',
+  },
+  {
+    id: 'timeline-4',
+    date: 'April 2022',
+    title: 'Finally, Us',
+    description:
+      'In April 2022, we officially became a couple. This time, we chose to make our love last. What began as a simple exchange of numbers in 2013 had grown into something more meaningful—a love shaped by time, second chances, and the decision to stay. And now, we\'re ready to turn our once-unfinished story into a forever.',
+    image: '/StorySection/Story1.jpg',
+    caption: 'Choosing each other, for good',
+  },
+  {
+    id: 'timeline-5',
+    date: 'January 1, 2026',
+    title: 'The Surprise That Started Our Forever',
+    description:
+      "As we welcomed the New Year on January 1, 2026, I thought we were simply counting down to a new beginning. Little did I know, my partner had prepared a surprise that would make the moment even more unforgettable. While everyone was cheering, I was caught off guard when I realized that the excitement wasn't just about the New Year—he was about to ask me to spend forever with him. With a heart full of love and happiness, I said YES to a lifetime of love, promises, and forever together.",
+    image: '/StorySection/story3.jpg',
+    caption: 'Said yes to forever',
   },
 ];

@@ -6,8 +6,6 @@ import { timelineEvents } from './timeline';
 export const weddingInfo: WeddingInfo = {
   navigation: [
     { id: 'story', label: 'Our Story', icon: 'Heart' },
-
-    { id: 'details', label: 'Details', icon: 'Calendar' },
     { id: 'gallery', label: 'Gallery', icon: 'Camera' },
     { id: 'rsvp', label: 'RSVP', icon: 'Mail' },
   ],
@@ -27,56 +25,6 @@ export const weddingInfo: WeddingInfo = {
   },
   countdownDate: '2026-12-02T00:00:00',
   timeline: timelineEvents,
-
-  details: {
-    items: [
-      {
-        id: 'detail-1',
-        title: 'The Ceremony',
-        subtitle: 'The Sands at Sunset Cliff',
-        time: '4:00 PM',
-        location: 'Malibu, California',
-        note: 'Attire: Coastal Black Tie',
-        icon: 'Calendar',
-      },
-      {
-        id: 'detail-2',
-        title: 'The Reception',
-        subtitle: 'The Azure Shore Estate',
-        time: '6:30 PM',
-        location: 'Private beach access provided',
-        note: 'Dinner, drinks & dancing to follow',
-        icon: 'Heart',
-      },
-    ],
-    faqs: [
-      {
-        question: 'Can I bring a plus-one?',
-        answer:
-          'Please check your invitation, or message us and we\u2019ll be happy to help.',
-      },
-      {
-        question: 'Are children welcome?',
-        answer:
-          'Please check your invitation, or message us and we\u2019ll be happy to help.',
-      },
-      {
-        question: 'How do we get there?',
-        answer:
-          'The celebration takes place at The Azure Shore Estate, 1024 Coast Highway in Malibu, CA. Valet parking is provided at the main gate, and a shuttle will be available from local hotels about an hour before the ceremony.',
-      },
-      {
-        question: 'Where should we stay?',
-        answer:
-          'Please check the travel section on your invitation, or message us and we\u2019ll be happy to help.',
-      },
-      {
-        question: 'What about gifts?',
-        answer:
-          'Please check your invitation, or message us and we\u2019ll be happy to help.',
-      },
-    ],
-  },
   dressCode: [
     {
       id: 'code-1',
@@ -104,15 +52,15 @@ export const weddingInfo: WeddingInfo = {
       eyebrow: 'The Ceremony',
       script: 'Where we exchange our vows',
       heading: 'The Church',
-      title: 'St. Gabriel Parish Church',
-      address: '215 Ocean Avenue, Malibu, CA 90265',
+      title: 'San Augustin Foursquare Gospel Church',
+      address: 'Poblacion, San Augustin, Romblon, Philippines',
       description:
-        'We will gather at St. Gabriel Parish Church to exchange our vows. Please arrive a little early so we can begin the ceremony together.',
+        'We will gather at San Augustin Foursquare Gospel Church to exchange our vows. Please arrive a little early so we can begin the ceremony together.',
       mapEmbedUrl: '',
       image: '/loc.jpg',
       facts: [
         { label: 'Ceremony', value: '4:00 PM' },
-        { label: 'Address', value: '215 Ocean Avenue, Malibu, CA 90265' },
+        { label: 'Address', value: 'Poblacion, San Augustin, Romblon, Philippines' },
         { label: 'Parking', value: 'Available on site' },
         { label: 'Arrival', value: 'Please arrive by 3:30 PM' },
       ],

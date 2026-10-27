@@ -3,7 +3,7 @@ import Navbar from './components/Navbar';
 import HeroCarousel from './components/HeroCarousel';
 import Countdown from './components/Countdown';
 import StoryTimeline from './components/StoryTimeline';
-import WeddingDetails from './components/WeddingDetails';
+
 import Location from './components/Location';
 import DressCode from './components/DressCode';
 import Gallery from './components/Gallery';
@@ -48,9 +48,7 @@ function App() {
             <Gallery images={weddingInfo.gallery} />
           </section>
           <Countdown targetDate={weddingInfo.countdownDate} backgroundImage="/CountDownSection/Cd.jpg" />
-          <section id="details" className="faq-bg scroll-mt-20 px-6 py-12 sm:px-10 sm:py-16 lg:px-20 lg:py-20">
-            <WeddingDetails details={weddingInfo.details} />
-          </section>
+         
           <section id="location" className="scroll-mt-20 bg-[var(--beige)] p-0">
             <Location locations={weddingInfo.locations} />
           </section>
