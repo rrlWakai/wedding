@@ -58,9 +58,11 @@ export interface GuestAttireGroup {
   id: string;
   heading: string;
   paletteLabel: string;
+  image?: string | null;
+  alt?: string;
   /** Set to `true` when no final image exists yet; a temporary placeholder is rendered instead. */
   pendingImage: boolean;
-  swatches: { color: string }[];
+  swatches: { color: string; label?: string }[];
 }
 
 export interface LocationInfo {

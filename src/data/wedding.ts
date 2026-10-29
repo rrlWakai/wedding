@@ -2,6 +2,7 @@ import type { EntourageSlide, GuestAttireGroup, WeddingInfo } from '../types';
 import heroImage from '../../Hero.jpg';
 import { galleryImages } from './gallery';
 import { timelineEvents } from './timeline';
+import DressCode from '../components/DressCode';
 
 export const weddingInfo: WeddingInfo = {
   navigation: [
@@ -96,12 +97,12 @@ export const weddingInfo: WeddingInfo = {
       label: 'Parents',
       image: '/DressCode/Parents.png',
       pendingImage: false,
-      alt: "Parents attire — a dark mauve gown for the ladies and a cream barong with brown pants for the gentlemen",
+      alt: 'Parents attire: a dark mauve gown for the ladies and a navy blue suit and tie for the gentlemen',
       ladies: 'Dark Mauve Gown',
-      gentlemen: 'Cream Barong and Brown Pants',
+      gentlemen: 'Navy Blue Suit and Tie',
       swatches: [
         { color: '#895F72', label: 'Dark mauve' },
-        { color: '#F1E5CE', label: 'Cream' },
+        { color: '#22304F', label: 'Navy blue' },
       ],
     },
     {
@@ -114,15 +115,15 @@ export const weddingInfo: WeddingInfo = {
       gentlemen: 'Cream Barong and Brown Pants',
       swatches: [
         { color: '#E9B19A', label: 'Peach' },
-        { color: '#F1E5CE', label: 'Cream' },
+        { color: '#E6D7B5', label: 'Cream' },
       ],
     },
     {
       id: 'maid-of-honor-best-man',
       label: 'Maid of Honor & Best Man',
-      // No outfit artwork available yet — temporary placeholder rendered instead.
-      image: null,
-      pendingImage: true,
+     
+      image: '/DressCode/Honor.png'  ,
+      pendingImage: false,
       alt: 'Maid of Honor and Best Man attire — attire image coming soon',
       lady: 'Dusty Blue Floor-Length Gown',
       gentleman: 'Mocha Brown Suit and Tie',
@@ -141,7 +142,7 @@ export const weddingInfo: WeddingInfo = {
       gentlemen: 'White Polo, Choco Brown Neck Ties, Brown Belt, and Khaki Pants',
       swatches: [
         { color: '#4A3028', label: 'Chocolate brown' },
-        { color: '#F1E5CE', label: 'Cream' },
+        { color: '#E6D7B5', label: 'Cream' },
         { color: '#B8A47F', label: 'Khaki' },
       ],
     },
@@ -169,34 +170,33 @@ export const weddingInfo: WeddingInfo = {
       gentlemen: 'White Polo, Moss Green Neck Ties, Brown Belt, and Khaki Pants',
       swatches: [
         { color: '#687D57', label: 'Moss green' },
-        { color: '#F1E5CE', label: 'Cream' },
+        { color: '#E6D7B5', label: 'Cream' },
         { color: '#B8A47F', label: 'Khaki' },
       ],
     },
   ],
-  /**
-   * Guest attire groups. Both await final outfit artwork and render temporary
-   * placeholders alongside their wedding-palette swatches.
-   */
+
   guestAttire: [
     {
       id: 'female-guests',
-      heading: 'Female Guests',
+      heading: 'Ladies',
       paletteLabel: "Female Guests' Palette",
-      pendingImage: true,
+      image: '/DressCode/GuestFemale.png',
+      pendingImage: false,
       swatches: [
-        { color: '#895F72' }, // Muted mauve
-        { color: '#E3C5C1' }, // Dusty blush pink
+        { color: '#895F72', label: 'Dark mauve' }, // Muted mauve
+        { color: '#E3C5C1', label: 'Blush' }, // Dusty blush pink
       ],
     },
     {
       id: 'male-guests',
-      heading: 'Male Guests',
+      heading: 'Gentlemen',
       paletteLabel: "Male Guests' Palette",
-      pendingImage: true,
+      image: '/DressCode/GuestMale.png',
+      pendingImage: false,
       swatches: [
-        { color: '#9BAFBE' }, // Dusty blue
-        { color: '#7B9380' }, // Muted sage green
+        { color: '#9BAFBE', label: 'Dusty blue' }, // Dusty blue
+        { color: '#7B9380', label: 'Sage green' }, // Muted sage green
       ],
     },
   ],

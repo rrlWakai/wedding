@@ -51,7 +51,7 @@ function App() {
           <section id="location" className="scroll-mt-20 bg-[var(--beige)] p-0">
             <Location locations={weddingInfo.locations} />
           </section>
-          <section className="bg-[#ebe2d8] px-6 py-12 sm:px-10 sm:py-16 lg:px-20 lg:py-20">
+          <section className="bg-transparent px-6 py-12 sm:px-10 sm:py-16 lg:px-20 lg:py-20">
             <DressCode
               entourage={weddingInfo.entourageSlides}
               guests={weddingInfo.guestAttire}
