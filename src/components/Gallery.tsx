@@ -11,7 +11,7 @@ export default function Gallery({ images }: GalleryProps) {
     <div className="mx-auto max-w-6xl">
       <SectionHeading
         eyebrow="Our Memories"
-        script="Quiet moments along the coast"
+        script="Quiet moments along the hills"
         title="Captured in golden light"
         className="mx-auto mb-8 max-w-2xl text-center sm:mb-10 lg:mb-12"
       />
