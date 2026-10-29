@@ -34,7 +34,7 @@ export const timelineEvents: TimelineEvent[] = [
     title: 'Finally, Us',
     description:
       'In April 2022, we officially became a couple. This time, we chose to make our love last. What began as a simple exchange of numbers in 2013 had grown into something more meaningful—a love shaped by time, second chances, and the decision to stay. And now, we\'re ready to turn our once-unfinished story into a forever.',
-    image: '/CurvedSection/cg2.jpg',
+    image: '/CurvedSection/cg1.jpg',
     caption: 'Choosing each other, for good',
   },
   {
