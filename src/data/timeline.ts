@@ -34,7 +34,7 @@ export const timelineEvents: TimelineEvent[] = [
     title: 'Finally, Us',
     description:
       'In April 2022, we officially became a couple. This time, we chose to make our love last. What began as a simple exchange of numbers in 2013 had grown into something more meaningful—a love shaped by time, second chances, and the decision to stay. And now, we\'re ready to turn our once-unfinished story into a forever.',
-    image: '/StorySection/Story1.jpg',
+    image: '/CurvedSection/cg2.jpg',
     caption: 'Choosing each other, for good',
   },
   {
@@ -43,7 +43,7 @@ export const timelineEvents: TimelineEvent[] = [
     title: 'The Surprise That Started Our Forever',
     description:
       "As we welcomed the New Year on January 1, 2026, I thought we were simply counting down to a new beginning. Little did I know, my partner had prepared a surprise that would make the moment even more unforgettable. While everyone was cheering, I was caught off guard when I realized that the excitement wasn't just about the New Year—he was about to ask me to spend forever with him. With a heart full of love and happiness, I said YES to a lifetime of love, promises, and forever together.",
-    image: '/StorySection/story3.jpg',
+    image: '/CurvedSection/cg7.jpg',
     caption: 'Said yes to forever',
   },
 ];
