@@ -4,6 +4,7 @@ import HeroCarousel from './components/HeroCarousel';
 import Countdown from './components/Countdown';
 import StoryTimeline from './components/StoryTimeline';
 import Location from './components/Location';
+import SectionHeading from './components/SectionHeading';
 import DressCode from './components/DressCode';
 import Gallery from './components/Gallery';
 import RSVP from './components/RSVP';
@@ -40,24 +41,33 @@ function App() {
           <HeroCarousel hero={weddingInfo.hero} />
           <AnnouncementStrip />
           <CurvedGallery />
-          <section id="story" className="scroll-mt-20 bg-transparent px-6 py-12 sm:px-10 sm:py-16 lg:px-20 lg:py-20">
+          <section id="story" className="scroll-mt-20 bg-transparent px-6 py-10 sm:px-10 sm:py-12 lg:px-20 lg:py-14">
             <StoryTimeline events={weddingInfo.timeline} />
           </section>
-          <section id="gallery" className="scroll-mt-20 bg-transparent px-6 py-12 sm:px-10 sm:py-16 lg:px-20 lg:py-20">
+          <section id="gallery" className="scroll-mt-20 bg-transparent px-6 py-10 sm:px-10 sm:py-12 lg:px-20 lg:py-14">
             <Gallery images={weddingInfo.gallery} />
           </section>
           <Countdown targetDate={weddingInfo.countdownDate} backgroundImage="/CountDownSection/Cd.jpg" />
-         
+
+          <section className="bg-[#f5f0eb] px-6 pt-10 pb-4 sm:px-10 sm:pt-12 sm:pb-6 lg:px-20 lg:pt-14 lg:pb-8">
+            <SectionHeading
+              className="mx-auto max-w-3xl text-center"
+              eyebrow="The Wedding Day"
+              script="The day's celebration"
+              title="Wedding Details"
+            />
+          </section>
+
           <section id="location" className="scroll-mt-20 bg-[var(--beige)] p-0">
             <Location locations={weddingInfo.locations} />
           </section>
-          <section className="bg-transparent px-6 py-12 sm:px-10 sm:py-16 lg:px-20 lg:py-20">
+          <section className="bg-transparent px-6 py-10 sm:px-10 sm:py-12 lg:px-20 lg:py-14">
             <DressCode
               entourage={weddingInfo.entourageSlides}
               guests={weddingInfo.guestAttire}
             />
           </section>
-          <section id="rsvp" className="scroll-mt-20 bg-[#f5f0eb] px-6 py-12 sm:px-10 sm:py-16 lg:px-20 lg:py-20">
+          <section id="rsvp" className="scroll-mt-20 bg-[#f5f0eb] px-6 py-10 sm:px-10 sm:py-12 lg:px-20 lg:py-14">
             <RSVP dueDate={weddingInfo.rsvpDueDate} />
           </section>
         </main>

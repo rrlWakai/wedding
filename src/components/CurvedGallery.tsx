@@ -45,8 +45,7 @@ const MOBILE = { spacing: 0.36, item: 0.34 };
  * tilt and tiltMobile are the rotateY degrees at |u| = 1 on desktop and mobile.
  */
 const ROWS = [
-  { id: 'a', direction: +1, speed: 0.022, imageShift: 0, reverse: false, startOffsetSlots: 0,   depthFrac:  0.16, tilt: 20, tiltMobile: 17, spacingScale: 1 },
-  { id: 'b', direction: -1, speed: 0.016, imageShift: 4, reverse: false, startOffsetSlots: 0.5, depthFrac: -0.10, tilt: 16, tiltMobile: 13, spacingScale: 1 },
+  { id: 'a', direction: +1, speed: 0.022, imageShift: 0, reverse: false, startOffsetSlots: 0, depthFrac: 0.16, tilt: 20, tiltMobile: 17, spacingScale: 1 },
 ] as const;
 
 /** Base viewport padding in px */
@@ -102,7 +101,7 @@ export default function CurvedGallery() {
   const sectionRef   = useRef<HTMLElement>(null);
   const viewportRefs = useRef<(HTMLDivElement | null)[]>([]);
   const stageRefs    = useRef<(HTMLDivElement | null)[]>([]);
-  const figRefs      = useRef<(HTMLElement | null)[][]>([[], []]);
+  const figRefs      = useRef<(HTMLElement | null)[][]>([[]]);
   const warnedRef    = useRef(false);
   const warnedSrcsRef = useRef<Set<string>>(new Set());
 
@@ -227,12 +226,6 @@ export default function CurvedGallery() {
           `rotateY(${tilt.toFixed(3)}deg)`;
       }
     };
-
-    // ─────────────────────────────────────────────────────────────────────
-    // applyLayout — sizes and re-perspectives BOTH rows from a shared stage
-    // width (each viewport gets its own perspective element so the top row
-    // is not tilted by a shared origin).
-    // ─────────────────────────────────────────────────────────────────────
     const applyLayout = () => {
       const probe = stageRefs.current[0];
       if (!probe) return;

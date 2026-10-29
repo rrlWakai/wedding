@@ -232,7 +232,15 @@ h6 {
 /* The split venue panels sit on the warmer beige surface, so the small
    uppercase eyebrow needs the darker earth-brown token to stay legible. */
 .loc-heading .section-eyebrow {
-  color: var(--earth-brown);
+  display: inline-block;
+  padding: 0.42rem 0.95rem;
+  border-radius: 9999px;
+  background-color: var(--earth-brown);
+  color: #f5f0eb;
+  font-size: clamp(0.625rem, 0.34rem + 0.6vw, 0.75rem);
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  box-shadow: 0 8px 18px -10px rgb(111 76 46 / 0.6);
 }
 
 /* ---- FAQ (Good to know) ---- */
@@ -274,7 +282,7 @@ h6 {
 .tl-draw{fill:none;stroke:var(--tl-gold);stroke-width:2;stroke-linecap:round}
 .tl-walker{fill:var(--tl-gold);filter:drop-shadow(0 0 7px var(--tl-gold))}
 .tl-chap{position:relative;z-index:1;display:grid;grid-template-columns:repeat(12,1fr);column-gap:1.25rem;align-items:start}
-.tl-end{height:clamp(4rem,10vw,8rem)}
+.tl-end{height:clamp(1rem,2.5vw,2rem)}
 .tl-print{position:relative;margin:0;background:var(--tl-paper);padding:.7rem .7rem 0;box-shadow:0 18px 40px -14px var(--tl-shadow),0 2px 6px rgba(0,0,0,.12);align-self:start;transition:box-shadow 300ms ease}
 .tl-chap.is-active .tl-print{box-shadow:0 20px 42px -14px rgba(120,90,50,.26),0 3px 8px rgba(0,0,0,.14)}
 .tl-print img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover}

@@ -142,7 +142,7 @@
   position: relative;
   width: 100%;
   overflow: hidden;
-  padding: clamp(3.25rem, 7vw, 5.5rem) 0 clamp(3rem, 6vw, 4.75rem);
+  padding: clamp(2.25rem, 4.5vw, 3.25rem) 0 clamp(1.75rem, 3.5vw, 2.5rem);
   /* Transparent so the row sits on the page's cream gradient — no beige band. */
   background: transparent;
   color: var(--text-primary);
@@ -153,14 +153,14 @@
   position: relative;
   z-index: 2;
   max-width: 42rem;
-  margin: 0 auto clamp(2.25rem, 5vw, 3.5rem);
+  margin: 0 auto clamp(1.5rem, 3.5vw, 2.25rem);
   padding: 0 clamp(1.25rem, 5vw, 2rem);
   text-align: center;
 }
 
 .gal-lead {
   max-width: 34rem;
-  margin: clamp(1.75rem, 3.5vw, 2.5rem) auto 0;
+  margin: clamp(1rem, 2vw, 1.5rem) auto 0;
   font-size: clamp(0.9rem, 0.85rem + 0.2vw, 1rem);
   line-height: 1.75;
   color: var(--text-muted);
@@ -171,7 +171,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.55rem;
-  margin-top: clamp(1.35rem, 3vw, 2rem);
+  margin-top: clamp(1.1rem, 2.2vw, 1.5rem);
   padding: 0.85rem 2rem;
   border-radius: 9999px;
   background: var(--earth-brown);

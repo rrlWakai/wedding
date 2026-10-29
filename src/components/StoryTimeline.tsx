@@ -26,9 +26,14 @@ export default function StoryTimeline({ events }: { events: TimelineEvent[] }) {
       ? introRef.current.getBoundingClientRect().bottom - r.top
       : 0;
     const startY = introBottom - 20;
-    const endY = endEl
-      ? endEl.getBoundingClientRect().top - r.top - 16
-      : Math.max(startY + 200, section.offsetHeight - window.innerHeight * 0.25);
+    const knots = section.querySelectorAll<HTMLElement>('[data-knot]');
+    const lastKnot = knots[knots.length - 1];
+    const lastKnotBox = lastKnot?.getBoundingClientRect();
+    const endY = lastKnotBox
+      ? lastKnotBox.top + lastKnotBox.height / 2 - r.top
+      : endEl
+        ? endEl.getBoundingClientRect().top - r.top - 16
+        : Math.max(startY + 200, section.offsetHeight - window.innerHeight * 0.25);
     const travel = Math.max(1, endY - startY);
     const current = window.scrollY + viewportOffset;
     const sectionStart = window.scrollY + r.top + startY;
@@ -57,8 +62,7 @@ export default function StoryTimeline({ events }: { events: TimelineEvent[] }) {
       svg = svgRef.current,
       base = baseRef.current,
       draw = drawRef.current,
-      intro = introRef.current,
-      endEl = endRef.current;
+      intro = introRef.current;
     if (!section || !svg || !base || !draw || !intro) return;
     const r = section.getBoundingClientRect();
     const W = r.width,
@@ -71,8 +75,6 @@ export default function StoryTimeline({ events }: { events: TimelineEvent[] }) {
       const b = k.getBoundingClientRect();
       pts.push({ x: b.left + b.width / 2 - r.left, y: b.top + b.height / 2 - r.top });
     });
-    const endY = endEl ? endEl.getBoundingClientRect().top - r.top - 14 : H - window.innerHeight * 0.22;
-    pts.push({ x: W * 0.5, y: Math.max(pts[pts.length - 1].y + 40, endY) });
     let d = `M${pts[0].x} ${pts[0].y}`;
     for (let i = 1; i < pts.length; i++) {
       const a = pts[i - 1],

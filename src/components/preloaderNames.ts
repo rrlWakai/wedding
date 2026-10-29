@@ -1,7 +1,3 @@
-// AUTO-GENERATED from the Great Vibes typeface (SIL Open Font License).
-// Real glyph outlines powering the preloader handwriting stroke animation.
-// Regenerate from the font if PRELOADER_TEXT changes; do not hand-edit.
-
 export const PRELOADER_TEXT = "Jerico & Glenda";
 
 export interface PreloaderGlyph {

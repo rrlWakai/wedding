@@ -2,7 +2,6 @@ import type { EntourageSlide, GuestAttireGroup, WeddingInfo } from '../types';
 import heroImage from '../../Hero.jpg';
 import { galleryImages } from './gallery';
 import { timelineEvents } from './timeline';
-import DressCode from '../components/DressCode';
 
 export const weddingInfo: WeddingInfo = {
   navigation: [
@@ -53,44 +52,35 @@ export const weddingInfo: WeddingInfo = {
       eyebrow: 'The Ceremony',
       script: 'Where we exchange our vows',
       heading: 'The Church',
-      title: 'San Augustin Foursquare Gospel Church',
-      address: 'Poblacion, San Augustin, Romblon, Philippines',
+      title: 'San Agustin Foursquare Gospel Church',
+      address: 'Poblacion, San Agustin, Romblon, Philippines',
       description:
-        'We will gather at San Augustin Foursquare Gospel Church to exchange our vows. Please arrive a little early so we can begin the ceremony together.',
+        'We will gather at San Agustin Foursquare Gospel Church in Poblacion, San Agustin, Romblon to exchange our vows.',
       mapEmbedUrl: '',
       image: '/loc.jpg',
       facts: [
-        { label: 'Ceremony', value: '4:00 PM' },
-        { label: 'Address', value: 'Poblacion, San Augustin, Romblon, Philippines' },
-        { label: 'Parking', value: 'Available on site' },
-        { label: 'Arrival', value: 'Please arrive by 3:30 PM' },
+        { label: 'Ceremony', value: '2:00 PM' },
+        { label: 'Address', value: 'Poblacion, San Agustin, Romblon, Philippines' },
       ],
     },
     {
       eyebrow: 'The Reception',
-      script: 'Dinner, dancing & celebrating',
+      script: 'Dinner & evening fellowship',
       heading: 'The Reception',
-      title: 'Azure Shore Estate',
-      address: '1024 Coast Highway, Malibu, CA 90265',
+      title: 'Rise and Shine Garden Cafe and Events Place',
+      address: 'Cabutulan, San Agustin, Romblon, Philippines',
       description:
-        'Our celebration continues at a private coastal estate overlooking the Pacific. Valet parking is provided at the main gate, and a shuttle will be available from nearby accommodations.',
-      mapEmbedUrl:
-        'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3303.6835939775755!2d-118.67956368478304!3d34.03123848060825!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80e82b6531a1783f%3A0x7572a3fdc16f91a4!2sMalibu%2C%20CA%2090265!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus',
+        'Our celebration continues at Rise and Shine Garden Cafe and Events Place in Cabutulan, San Agustin, Romblon for the reception program, dinner, and an evening of fellowship.',
+      mapEmbedUrl: '',
       image: '/loc.jpg',
       facts: [
-        { label: 'Reception', value: '6:30 PM' },
-        { label: 'Address', value: '1024 Coast Highway, Malibu, CA 90265' },
-        { label: 'Parking', value: 'Valet available' },
-        { label: 'Shuttle', value: 'From local hotels, 1 hour before' },
+        { label: 'Reception Program', value: '4:30 PM' },
+        { label: 'Dinner Reception', value: '6:00 PM' },
+        { label: 'Address', value: 'Cabutulan, San Agustin, Romblon, Philippines' },
       ],
     },
   ],
   gallery: galleryImages,
-  /**
-   * Entourage attire slides for the Dress Code carousel.
-   * Categories with `image: null` and `pendingImage: true` await final outfit
-   * artwork and render a temporary placeholder instead.
-   */
   entourageSlides: [
     {
       id: 'parents',
@@ -184,8 +174,8 @@ export const weddingInfo: WeddingInfo = {
       image: '/DressCode/GuestFemale.png',
       pendingImage: false,
       swatches: [
-        { color: '#895F72', label: 'Dark mauve' }, // Muted mauve
-        { color: '#E3C5C1', label: 'Blush' }, // Dusty blush pink
+        { color: '#895F72', label: 'Dark mauve' }, 
+        { color: '#E3C5C1', label: 'Blush' }, 
       ],
     },
     {
@@ -200,5 +190,5 @@ export const weddingInfo: WeddingInfo = {
       ],
     },
   ],
-  rsvpDueDate: 'October 1, 2026',
+  rsvpDueDate: 'November 30, 2026',
 };

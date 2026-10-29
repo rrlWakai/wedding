@@ -11,15 +11,14 @@ interface DressCodeProps {
   guests: GuestAttireGroup[];
 }
 
-const ENTOURAGE_GROUPS: { title: string; note: string; ids: string[] }[] = [
+const ENTOURAGE_GROUPS: { title: null; note?: null; ids: string[] }[] = [
   {
-    title: 'Family',
-    note: 'Parents and sponsors',
+    title: null,
     ids: ['parents', 'principal-sponsors', 'secondary-sponsors'],
   },
   {
-    title: 'Wedding party',
-    note: 'Maid of honor, best man, and the rest of the party',
+    title: null,
+    note: null,
     ids: ['maid-of-honor-best-man', 'bridesmaids-groomsmen', 'flower-girls-bearers'],
   },
 ];
@@ -125,10 +124,6 @@ function GuestCard({ group }: { group: GuestAttireGroup }) {
 
   return (
     <article className="p-4 pb-6">
-      <h3 className="font-display text-xl text-[#3d2b1f] text-left mb-4">
-        {group.heading}
-      </h3>
-
       {image ? (
         <div className={`${SLOT} bg-transparent`}>
           <img
@@ -152,6 +147,10 @@ function GuestCard({ group }: { group: GuestAttireGroup }) {
         </div>
       )}
 
+      <h3 className="font-display text-xl text-[#3d2b1f] text-left mt-4">
+        {group.heading}
+      </h3>
+
       <div className="mt-4 grid grid-cols-2 gap-3">
         {group.swatches.map((swatch) => (
           <div key={swatch.color} className="flex items-center gap-2">
@@ -159,13 +158,13 @@ function GuestCard({ group }: { group: GuestAttireGroup }) {
               aria-hidden="true"
               className="inline-block shrink-0 rounded-full"
               style={{
-                width: 16,
-                height: 16,
+                width: 20,
+                height: 20,
                 backgroundColor: swatch.color,
                 borderRadius: '9999px',
               }}
             />
-            <span className="font-semibold text-[#3d2b1f] text-[0.95rem]">
+            <span className="font-semibold text-[#3d2b1f] text-base">
               {swatch.label}
             </span>
           </div>
@@ -200,7 +199,9 @@ export default function DressCode({ entourage, guests }: DressCodeProps) {
                 <h3 className="font-display text-2xl text-[#3d2b1f]">
                   {group.title}
                 </h3>
-                <p className="text-[#5c4a3d]">{group.note}</p>
+                {group.note && (
+                  <p className="text-[#5c4a3d]">{group.note}</p>
+                )}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
@@ -217,7 +218,7 @@ export default function DressCode({ entourage, guests }: DressCodeProps) {
           <h2 className="section-title">Semi-Formal Attire</h2>
         </div>
 
-        <p className="mx-auto mt-5 max-w-xl text-center text-[#5c4a3d] leading-6 lg:mx-0 lg:text-left">
+        <p className="mx-auto mt-5 max-w-xl text-center text-[#5c4a3d] leading-6">
           We would be delighted to see our guests dressed in formal/semi-formal
           attire inspired by our wedding palette.
         </p>

@@ -54,7 +54,7 @@ export default function Countdown({ targetDate, backgroundImage }: CountdownProp
     <>
       <div
         id="countdown"
-        className="scroll-mt-20 bg-[#f5f0eb] px-6 pb-10 pt-12 sm:px-10 sm:pb-14 sm:pt-16 lg:px-20 lg:pb-16 lg:pt-20"
+        className="scroll-mt-20 bg-[#f5f0eb] px-6 py-10 sm:px-10 sm:py-12 lg:px-20 lg:py-14"
       >
         <SectionHeading
           eyebrow="Counting Down"
