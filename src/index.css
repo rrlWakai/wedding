@@ -244,6 +244,14 @@ h6 {
   font-family: 'Bodoni Moda', 'Playfair Display', Georgia, serif;
 }
 
+/* ---- Dress Code carousel scrollbar ---- */
+.dress-code-track {
+  scrollbar-width: none; /* Firefox */
+}
+.dress-code-track::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

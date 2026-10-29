@@ -3,7 +3,6 @@ import Navbar from './components/Navbar';
 import HeroCarousel from './components/HeroCarousel';
 import Countdown from './components/Countdown';
 import StoryTimeline from './components/StoryTimeline';
-
 import Location from './components/Location';
 import DressCode from './components/DressCode';
 import Gallery from './components/Gallery';
@@ -53,7 +52,10 @@ function App() {
             <Location locations={weddingInfo.locations} />
           </section>
           <section className="bg-[#ebe2d8] px-6 py-12 sm:px-10 sm:py-16 lg:px-20 lg:py-20">
-            <DressCode dressCode={weddingInfo.dressCode} />
+            <DressCode
+              entourage={weddingInfo.entourageSlides}
+              guests={weddingInfo.guestAttire}
+            />
           </section>
           <section id="rsvp" className="scroll-mt-20 bg-[#f5f0eb] px-6 py-12 sm:px-10 sm:py-16 lg:px-20 lg:py-20">
             <RSVP dueDate={weddingInfo.rsvpDueDate} />

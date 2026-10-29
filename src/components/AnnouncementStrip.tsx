@@ -26,7 +26,7 @@ function AnnouncementItem({ text, linkLabel, href, interactive }: ItemProps) {
 const REPEAT = 5;
 
 export default function AnnouncementStrip({
-  text = 'Save the date: December 2, 2026 in Malibu, California',
+  text = 'Save the date: December 2, 2026 in San Agustin Foursquare Gospel Church, Poblacion, Romblon',
   linkLabel = 'RSVP',
   href = '#rsvp',
 }: Props) {

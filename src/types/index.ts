@@ -34,6 +34,35 @@ export interface DressCodeCategory {
   swatchClasses: string[];
 }
 
+export interface EntourageSwatch {
+  color: string;
+  label: string;
+}
+
+export interface EntourageSlide {
+  id: string;
+  label: string;
+  /** Public URL of the outfit illustration/photo. `null` while artwork is pending. */
+  image: string | null;
+  /** Set to `true` when no final image exists yet; a temporary placeholder is rendered instead. */
+  pendingImage: boolean;
+  alt: string;
+  lady?: string;
+  ladies?: string;
+  gentleman?: string;
+  gentlemen?: string;
+  swatches: EntourageSwatch[];
+}
+
+export interface GuestAttireGroup {
+  id: string;
+  heading: string;
+  paletteLabel: string;
+  /** Set to `true` when no final image exists yet; a temporary placeholder is rendered instead. */
+  pendingImage: boolean;
+  swatches: { color: string }[];
+}
+
 export interface LocationInfo {
   eyebrow?: string;
   script?: string;
@@ -69,6 +98,8 @@ export interface WeddingInfo {
   countdownDate: string;
   timeline: TimelineEvent[];
   dressCode: DressCodeCategory[];
+  entourageSlides: EntourageSlide[];
+  guestAttire: GuestAttireGroup[];
   locations: LocationInfo[];
   gallery: GalleryImage[];
   rsvpDueDate: string;
