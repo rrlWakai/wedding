@@ -1,452 +1,166 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { inviteImages } from '../data/invite';
 import ScrollReveal from './ScrollReveal';
 import SectionHeading from './SectionHeading';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Layout constants. Everything that must track the stage width is a fraction.
-// ─────────────────────────────────────────────────────────────────────────────
-
-/** Minimum number of rendered slots (one full ribbon period). */
-const MIN_SLOTS = 9;
-
-/** Perspective distance = 0.75 × stage width. */
-const PERSPECTIVE_FRAC = 0.75;
-
-/** u = t / (0.55 × stage width). */
-const HALF_SPAN_FRAC = 0.55;
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Speed & feel constants.
-// ─────────────────────────────────────────────────────────────────────────────
-
-/** 1/s — how fast velocity returns to the base drift after a flick/release. */
-const VELOCITY_EASE = 2.2;
-
-/** Pointer-to-offset ratio; try 1.1 if the row feels like it lags the finger. */
-const DRAG_GAIN = 1.0;
-
-/** Max flick speed in stage-widths per second. */
-const FLICK_MAX_FRAC = 1.2;
-
-/** Desktop layout (stage width ≥ 760px). */
-const DESKTOP = { spacing: 0.22, item: 0.21 };
-
-/** Mobile layout (stage width < 760px). */
-const MOBILE = { spacing: 0.36, item: 0.34 };
-
-/**
- * Two counter-drifting ribbons. direction +1 = photos drift LEFT (offset
- * grows), −1 = photos drift RIGHT (offset shrinks). speed is a fraction of
- * stage width per second — 0.022 ≈ one photo pitch (~0.22·W) every 10s on
- * desktop; setting speed to 0 freezes a row's auto drift while keeping drag.
- *
- * depthFrac is a fraction of stage width and is SIGNED. Positive means the centre is recessed (concave). Negative means the centre bulges toward the viewer (convex).
- * tilt and tiltMobile are the rotateY degrees at |u| = 1 on desktop and mobile.
- */
-const ROWS = [
-  { id: 'a', direction: +1, speed: 0.022, imageShift: 0, reverse: false, startOffsetSlots: 0, depthFrac: 0.16, tilt: 20, tiltMobile: 17, spacingScale: 1 },
-] as const;
-
-/** Base viewport padding in px */
-const VERTICAL_PAD = 12;
-/** The fraction of row B's growth padding pulled back with a negative margin */
-const ROW_OVERLAP_K = 0.8;
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Helpers
-// ─────────────────────────────────────────────────────────────────────────────
-
-function clamp(v: number, lo: number, hi: number) {
-  return Math.max(lo, Math.min(hi, v));
-}
-
-/**
- * Seamless modulo wrap that maps any value into [-halfPeriod, +halfPeriod).
- * Because the ribbon period is many screen-widths long, the wrap seam is
- * always off-screen, so the offset can grow forever with no visible jump.
- */
-function wrapCenter(v: number, period: number): number {
-  const half = period / 2;
-  return ((v + half) % period + period) % period - half;
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Per-row mutable state (refs only — never setState per frame)
-// ─────────────────────────────────────────────────────────────────────────────
-
-interface RowState {
-  offset: number;          // px along the ribbon, grows/shrinks freely
-  velocity: number;        // px/s of offset (signed)
-  dragging: boolean;
-  pointerId: number;
-  dragStartX: number;
-  dragStartOffset: number;
-  samples: { x: number; t: number }[]; // ring buffer for release velocity
-  spacing: number;         // px between slot centres
-  itemW: number;           // px photo width
-  span: number;            // px half-span for the u profile
-  depth: number;           // px centre recess (signed)
-  tilt: number;            // deg at |u| = 1
-  pxPerSec: number;        // signed base drift, px/s (auto, not during drag)
-  stageW: number;          // px stage/viewport width
-  initOffset: boolean;     // apply startOffsetSlots*spacing once
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Component
-// ─────────────────────────────────────────────────────────────────────────────
+const SWIPE_THRESHOLD = 36;
+const VELOCITY_THRESHOLD = 0.28;
 
 export default function CurvedGallery() {
-  const sectionRef   = useRef<HTMLElement>(null);
-  const viewportRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const stageRefs    = useRef<(HTMLDivElement | null)[]>([]);
-  const figRefs      = useRef<(HTMLElement | null)[][]>([[]]);
-  const warnedRef    = useRef(false);
-  const warnedSrcsRef = useRef<Set<string>>(new Set());
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [dragOffset, setDragOffset] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [stageWidth, setStageWidth] = useState(1000);
 
-  const rowStates = useRef<RowState[]>(
-    ROWS.map(() => ({
-      offset: 0,
-      velocity: 0,
-      dragging: false,
-      pointerId: -1,
-      dragStartX: 0,
-      dragStartOffset: 0,
-      samples: [],
-      spacing: 0,
-      itemW: 0,
-      span: 0,
-      depth: 0,
-      tilt: 0,
-      pxPerSec: 0,
-      stageW: 0,
-      initOffset: true,
-    })),
-  );
+  const stageRef = useRef<HTMLDivElement>(null);
+  const dragInfo = useRef({
+    startX: 0,
+    startY: 0,
+    lastX: 0,
+    lastTime: 0,
+    velocity: 0,
+    isDragging: false,
+    isHorizontal: null as boolean | null,
+    pointerId: -1,
+  });
 
-  const [inView, setInView] = useState(false);
-  const [failed, setFailed] = useState<ReadonlySet<string>>(() => new Set<string>());
+  const count = inviteImages.length;
 
-  const images = useMemo(
-    () => inviteImages.filter((img) => Boolean(img?.src) && !failed.has(img.src)),
-    [failed],
-  );
-  const ready = images.length > 0;
-  const slotCount = Math.max(MIN_SLOTS, images.length);
-
-  /** Per-row image order: base list, reversed per ROWS.reverse, then rotated. */
-  const orderedRows = useMemo(
-    () =>
-      ROWS.map((row) => {
-        let base = images;
-        if (row.reverse) base = [...base].reverse();
-        return Array.from(
-          { length: base.length },
-          (_, i) => base[(i + row.imageShift) % base.length],
-        );
-      }),
-    [images],
-  );
-
-  // ── Warn once if the dataset collapsed to a single image ─────────────────
+  // Responsive stage measurement
   useEffect(() => {
-    if (images.length !== 1 || warnedRef.current) return;
-    warnedRef.current = true;
-    console.warn('CurvedGallery: only one valid image in inviteImages');
-  }, [images.length]);
-
-  // ── Entrance animation ───────────────────────────────────────────────────
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce || !('IntersectionObserver' in window)) { setInView(true); return; }
-    const io = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setInView(true); io.disconnect(); } },
-      { threshold: 0.15 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
+    const updateWidth = () => {
+      if (stageRef.current) {
+        setStageWidth(stageRef.current.clientWidth);
+      }
+    };
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
   }, []);
 
-  // ── Motion loop + drag wiring ────────────────────────────────────────────
-  useEffect(() => {
-    if (!ready) return;
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    let onScreen = true;
-    let last = 0;
-    let raf = 0;
-
-    // ─────────────────────────────────────────────────────────────────────
-    // applyRowFrame — identical per-row world-space math to the original
-    // single ribbon. Slot centres are laid out linearly in world x and never
-    // back-projected: the browser's perspective shrinks each photo and the
-    // gap beside it by the same factor, so gaps stay even.
-    //
-    //   period      = slotCount * spacing
-    //   centreIndex = (slotCount - 1) / 2
-    //   t           = wrapCenter((i - centreIndex)*spacing - offset, period)
-    //   u           = clamp(t / span, -1, 1)
-    //   z           = -depth * (1 - u*u)
-    //   tilt        = depends on depth sign
-    //
-    // Tilt sign: In CSS, positive rotateY pushes an element's right edge AWAY from the viewer.
-    // - Concave (A, depth>0): a right-side photo (u > 0) needs its outer (right) edge closer, so its tilt is negative: -tiltMax*u.
-    // - Convex (B, depth<0): a right-side photo needs its outer (right) edge farther away, so its tilt is positive: +tiltMax*u.
-    // The left side mirrors each case.
-    // ─────────────────────────────────────────────────────────────────────
-    const applyRowFrame = (i: number) => {
-      const rs = rowStates.current[i];
-      const spacing = rs.spacing;
-      const span = rs.span;
-      const depth = rs.depth;
-      const tiltMax = rs.tilt;
-      if (!spacing || !span) return;
-
-      const period = slotCount * spacing;
-      const centreIndex = (slotCount - 1) / 2;
-      const offset = rs.offset;
-      const figs = figRefs.current[i];
-
-      for (let s = 0; s < slotCount; s++) {
-        const figure = figs[s];
-        if (!figure) continue;
-
-        const slotX = (s - centreIndex) * spacing;
-        const t     = wrapCenter(slotX - offset, period);
-        const u     = clamp(t / span, -1, 1);
-        const z     = -depth * (1 - u * u);
-        const sign  = depth >= 0 ? 1 : -1;
-        const tilt  = -sign * tiltMax * u;
-
-        figure.style.transform =
-          `translate3d(calc(-50% + ${t.toFixed(2)}px), -50%, ${z.toFixed(2)}px) ` +
-          `rotateY(${tilt.toFixed(3)}deg)`;
+  // Keyboard navigation for accessibility
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        setActiveIndex((prev) => (prev - 1 + count) % count);
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        setActiveIndex((prev) => (prev + 1) % count);
       }
+    },
+    [count]
+  );
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    const stage = stageRef.current;
+    if (!stage) return;
+
+    dragInfo.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      lastX: e.clientX,
+      lastTime: performance.now(),
+      velocity: 0,
+      isDragging: true,
+      isHorizontal: null,
+      pointerId: e.pointerId,
     };
-    const applyLayout = () => {
-      const probe = stageRefs.current[0];
-      if (!probe) return;
-      const w = probe.clientWidth;
-      if (!w) return;
-      const cfg = w < 760 ? MOBILE : DESKTOP;
-      const span    = w * HALF_SPAN_FRAC;
-      const P       = w * PERSPECTIVE_FRAC;
 
-      for (let i = 0; i < ROWS.length; i++) {
-        const rs = rowStates.current[i];
-        const row = ROWS[i];
+    stage.setPointerCapture(e.pointerId);
+  };
 
-        const depth   = w * row.depthFrac;                      // signed
-        const tilt    = w < 760 ? row.tiltMobile : row.tilt;
-        const spacing = w * cfg.spacing * row.spacingScale;
-        const itemW   = w * cfg.item;
+  const onPointerMove = (e: React.PointerEvent) => {
+    const d = dragInfo.current;
+    if (!d.isDragging || e.pointerId !== d.pointerId) return;
 
-        if (import.meta.env.DEV && Math.abs(depth) > 0.5 * P) {
-          console.warn('CurvedGallery: |depth| is too large for the perspective');
+    const dx = e.clientX - d.startX;
+    const dy = e.clientY - d.startY;
+
+    // Determine gesture orientation early
+    if (d.isHorizontal === null) {
+      if (Math.abs(dx) > 6 || Math.abs(dy) > 6) {
+        d.isHorizontal = Math.abs(dx) >= Math.abs(dy);
+        if (d.isHorizontal) {
+          setIsDragging(true);
         }
-
-        rs.spacing  = spacing;
-        rs.itemW    = itemW;
-        rs.span     = span;
-        rs.depth    = depth;
-        rs.tilt     = tilt;
-        rs.stageW   = w;
-        rs.pxPerSec = row.direction * row.speed * w;
-
-        if (rs.initOffset) {
-          rs.offset = row.startOffsetSlots * spacing;
-          rs.initOffset = false;
-        }
-
-        const itemH = itemW * 4 / 3;
-        const growth = depth < 0 ? P / (P + depth) : 1;       // = P/(P - |depth|), about 1.15 for row B
-        const growthPad = itemH * (growth - 1) / 2;
-
-        const vp = viewportRefs.current[i];
-        if (vp) {
-          vp.style.perspective = `${P}px`;
-          if (i === 0) {
-            vp.style.paddingBlock = VERTICAL_PAD + 'px';
-            vp.style.marginTop = '0px';
-          } else {
-            vp.style.paddingBlock = (growthPad + VERTICAL_PAD) + 'px';
-            vp.style.marginTop = (-ROW_OVERLAP_K * growthPad) + 'px';
-          }
-        }
-
-        const stage = stageRefs.current[i];
-        if (stage) stage.style.height = `${itemW * (4 / 3)}px`;
-
-        const figs = figRefs.current[i];
-        for (let s = 0; s < slotCount; s++) {
-          const f = figs[s];
-          if (f) f.style.width = `${itemW}px`;
-        }
-
-        applyRowFrame(i);
       }
-    };
+    }
 
-    const baseFor = (i: number) => (reduce ? 0 : rowStates.current[i].pxPerSec);
-
-    // Reduced motion: the loop only lives long enough to ease flicks to 0.
-    const driftStopped = () =>
-      reduce && !rowStates.current.some((r) => r.dragging || Math.abs(r.velocity) >= 1);
-
-    const tick = (now: number) => {
-      if (!last) last = now;
-      const dt = Math.min(0.05, (now - last) / 1000);
-      last = now;
-
-      for (let i = 0; i < ROWS.length; i++) {
-        const rs = rowStates.current[i];
-        if (!rs.dragging) {
-          const base = baseFor(i);
-          rs.velocity += (base - rs.velocity) * (1 - Math.exp(-dt * VELOCITY_EASE));
-          rs.offset += rs.velocity * dt;
-        }
-        applyRowFrame(i);
-      }
-
-      if (driftStopped()) {
-        raf = 0;
-        last = 0;
-        return;
-      }
-      raf = requestAnimationFrame(tick);
-    };
-
-    const start = () => {
-      if (raf || !onScreen || document.hidden) return;
-      last = 0;
-      raf = requestAnimationFrame(tick);
-    };
-    const stop = () => {
-      if (raf) cancelAnimationFrame(raf);
-      raf = 0;
-      last = 0;
-    };
-
-    // ─── Pointer / keyboard handlers (per row) ────────────────────────────
-    const downs = ROWS.map((_, i) => (e: PointerEvent) => {
-      if (e.pointerType === 'mouse' && e.button !== 0) return;
-      const rs = rowStates.current[i];
-      const vp = viewportRefs.current[i];
-      if (!vp) return;
-      rs.dragging = true;
-      rs.pointerId = e.pointerId;
-      rs.dragStartX = e.clientX;
-      rs.dragStartOffset = rs.offset;
-      rs.samples.length = 0;
-      rs.samples.push({ x: e.clientX, t: performance.now() });
-      vp.setPointerCapture(e.pointerId);
-      vp.classList.add('is-dragging');
-    });
-
-    const moves = ROWS.map((_, i) => (e: PointerEvent) => {
-      const rs = rowStates.current[i];
-      if (!rs.dragging || e.pointerId !== rs.pointerId) return;
-      rs.offset = rs.dragStartOffset - (e.clientX - rs.dragStartX) * DRAG_GAIN;
+    if (d.isHorizontal) {
       const now = performance.now();
-      rs.samples.push({ x: e.clientX, t: now });
-      while (rs.samples.length > 6) rs.samples.shift();
-      while (rs.samples.length && rs.samples[0].t < now - 100) rs.samples.shift();
-      applyRowFrame(i);
-    });
+      const dt = Math.max(1, now - d.lastTime);
+      d.velocity = (e.clientX - d.lastX) / dt;
+      d.lastX = e.clientX;
+      d.lastTime = now;
+      setDragOffset(dx);
+    }
+  };
 
-    const releases = ROWS.map((_, i) => () => {
-      const rs = rowStates.current[i];
-      if (!rs.dragging) return;
-      rs.dragging = false;
-      rs.pointerId = -1;
-      const vp = viewportRefs.current[i];
-      if (vp) vp.classList.remove('is-dragging');
+  const onPointerEnd = (e: React.PointerEvent) => {
+    const d = dragInfo.current;
+    if (!d.isDragging || e.pointerId !== d.pointerId) return;
 
-      const s = rs.samples;
-      let velocity = 0;
-      if (s.length >= 2) {
-        const a = s[0];
-        const b = s[s.length - 1];
-        const dt = b.t - a.t;
-        if (dt >= 16) velocity = -((b.x - a.x) / dt) * 1000 * DRAG_GAIN;
+    const stage = stageRef.current;
+    if (stage && stage.hasPointerCapture(e.pointerId)) {
+      try {
+        stage.releasePointerCapture(e.pointerId);
+      } catch {
+        // pointer capture release fallback
       }
-      rs.samples.length = 0;
+    }
 
-      const maxV = FLICK_MAX_FRAC * rs.stageW;
-      if (maxV > 0) velocity = clamp(velocity, -maxV, maxV);
-      rs.velocity = velocity;
-      if (reduce) start();
-    });
+    const dx = e.clientX - d.startX;
+    const wasHorizontal = d.isHorizontal;
+    const velocity = d.velocity;
 
-    const preventDrag = (e: Event) => e.preventDefault();
+    d.isDragging = false;
+    d.isHorizontal = null;
+    d.pointerId = -1;
+    setIsDragging(false);
+    setDragOffset(0);
 
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
-      e.preventDefault();
-      const rs = rowStates.current[0];
-      rs.velocity += (e.key === 'ArrowRight' ? 1 : -1) * rs.spacing * 3;
-      if (reduce) start();
-    };
+    if (wasHorizontal) {
+      const shouldAdvanceNext = dx < -SWIPE_THRESHOLD || velocity < -VELOCITY_THRESHOLD;
+      const shouldAdvancePrev = dx > SWIPE_THRESHOLD || velocity > VELOCITY_THRESHOLD;
 
-    ROWS.forEach((_, i) => {
-      const vp = viewportRefs.current[i];
-      if (!vp) return;
-      vp.addEventListener('pointerdown', downs[i]);
-      vp.addEventListener('pointermove', moves[i]);
-      vp.addEventListener('pointerup', releases[i]);
-      vp.addEventListener('pointercancel', releases[i]);
-      vp.addEventListener('lostpointercapture', releases[i]);
-      vp.addEventListener('dragstart', preventDrag);
-    });
-    const aStage = stageRefs.current[0];
-    if (aStage) aStage.addEventListener('keydown', onKey);
+      if (shouldAdvanceNext) {
+        setActiveIndex((prev) => (prev + 1) % count);
+      } else if (shouldAdvancePrev) {
+        setActiveIndex((prev) => (prev - 1 + count) % count);
+      }
+    }
+  };
 
-    applyLayout();
+  // Click on a visible card to bring it into focus
+  const handleCardClick = (targetRel: number) => {
+    if (isDragging || Math.abs(dragOffset) > 6) return;
+    if (targetRel !== 0) {
+      setActiveIndex((prev) => (prev + targetRel + count) % count);
+    }
+  };
 
-    const ro = new ResizeObserver(applyLayout);
-    const probeStage = stageRefs.current[0];
-    if (probeStage) ro.observe(probeStage);
+  // Card dimensions & spacing calculation
+  const isMobile = stageWidth < 640;
+  const isTablet = stageWidth >= 640 && stageWidth < 1024;
 
-    const io = new IntersectionObserver(([entry]) => {
-      onScreen = entry.isIntersecting;
-      if (onScreen) start(); else stop();
-    });
-    if (sectionRef.current) io.observe(sectionRef.current);
+  const cardWidth = isMobile
+    ? Math.min(250, Math.max(210, stageWidth * 0.65))
+    : isTablet
+    ? 280
+    : 330;
 
-    const onVisibility = () => (document.hidden ? stop() : start());
-    document.addEventListener('visibilitychange', onVisibility);
-    if (!reduce) start();
+  const stepX = isMobile
+    ? cardWidth * 0.52
+    : isTablet
+    ? cardWidth * 0.58
+    : cardWidth * 0.64;
 
-    return () => {
-      stop();
-      ro.disconnect();
-      io.disconnect();
-      document.removeEventListener('visibilitychange', onVisibility);
-      ROWS.forEach((_, i) => {
-        const vp = viewportRefs.current[i];
-        if (!vp) return;
-        vp.removeEventListener('pointerdown', downs[i]);
-        vp.removeEventListener('pointermove', moves[i]);
-        vp.removeEventListener('pointerup', releases[i]);
-        vp.removeEventListener('pointercancel', releases[i]);
-        vp.removeEventListener('lostpointercapture', releases[i]);
-        vp.removeEventListener('dragstart', preventDrag);
-      });
-      if (aStage) aStage.removeEventListener('keydown', onKey);
-    };
-  }, [ready, slotCount, images]);
+  const dragFraction = isDragging && cardWidth > 0 ? dragOffset / cardWidth : 0;
 
-  // ── Render ───────────────────────────────────────────────────────────────
   return (
-    <section
-      ref={sectionRef}
-      id="invite"
-      className={`gal${inView ? ' is-in' : ''}`}
-      aria-label="Photo gallery"
-    >
+    <section id="invite" className="gal" aria-label="Photo gallery">
       <div className="gal-head">
         <SectionHeading
           eyebrow="Our Moments"
@@ -461,62 +175,78 @@ export default function CurvedGallery() {
           </p>
         </ScrollReveal>
         <ScrollReveal delay={0.32} y={16}>
-          <a className="gal-btn" href="#rsvp">RSVP Now</a>
+          <a className="gal-btn" href="#rsvp">
+            RSVP Now
+          </a>
         </ScrollReveal>
       </div>
 
-      {ready &&
-        ROWS.map((row, ri) => {
-          const list = orderedRows[ri];
+      <div
+        ref={stageRef}
+        className={`gal-stage ${isDragging ? 'is-dragging' : ''}`}
+        role="region"
+        aria-label="Layered photo gallery, swipe left or right"
+        tabIndex={0}
+        onKeyDown={handleKeyDown}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerEnd}
+        onPointerCancel={onPointerEnd}
+      >
+        {inviteImages.map((img, i) => {
+          let rel = i - activeIndex;
+          if (rel > count / 2) rel -= count;
+          if (rel < -count / 2) rel += count;
+
+          // Continuous relative position with real-time drag
+          const pos = rel - dragFraction;
+          const absPos = Math.abs(pos);
+
+          // Render only within visible depth range
+          const maxVisible = isMobile ? 1.6 : 2.6;
+          if (absPos > maxVisible) {
+            return null;
+          }
+
+          // Visual transformation: depth, scale, perspective, opacity
+          const x = pos * stepX;
+          const scale = Math.max(0.62, 1 - Math.min(absPos, 2) * 0.17);
+          const rotateY = Math.max(-16, Math.min(16, -pos * 10));
+          const opacity = absPos <= 0.2 ? 1 : Math.max(0.25, 1 - absPos * 0.38);
+          const zIndex = Math.round(10 - absPos * 3);
+          const brightness = absPos <= 0.2 ? 1 : Math.max(0.82, 1 - absPos * 0.12);
+          const isCenter = Math.abs(rel) === 0;
+
           return (
-            <div
-              key={row.id}
-              className="gal-viewport"
-              ref={(el) => { viewportRefs.current[ri] = el; }}
-              aria-hidden={ri === 1 ? true : undefined}
+            <figure
+              key={img.src}
+              className={`gal-card ${isCenter ? 'is-active' : ''}`}
+              style={{
+                width: `${cardWidth}px`,
+                transform: `translate3d(calc(-50% + ${x.toFixed(1)}px), -50%, 0) scale(${scale.toFixed(3)}) rotateY(${rotateY.toFixed(1)}deg)`,
+                zIndex,
+                opacity: opacity.toFixed(2),
+                filter: `brightness(${brightness.toFixed(2)})`,
+                transition: isDragging
+                  ? 'none'
+                  : 'transform 0.42s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.42s ease, filter 0.42s ease',
+                cursor: isCenter ? 'grab' : 'pointer',
+              }}
+              onClick={() => handleCardClick(rel)}
+              aria-hidden={!isCenter}
             >
-              <div
-                className="gal-stage"
-                ref={(el) => { stageRefs.current[ri] = el; }}
-                role={ri === 0 ? 'group' : undefined}
-                aria-label={ri === 0 ? 'Photos of Jerico and Glenda' : undefined}
-                tabIndex={ri === 0 ? 0 : undefined}
-              >
-                {Array.from({ length: slotCount }, (_, i) => {
-                  const img  = list[i % list.length];
-                  const dupe = i >= list.length;
-                  return (
-                    <figure
-                      key={`${img.src}-${i}`}
-                      ref={(el) => { figRefs.current[ri][i] = el; }}
-                      aria-hidden={ri === 0 && dupe ? true : undefined}
-                    >
-                      <img
-                        src={img.src}
-                        alt={ri === 1 || dupe ? '' : img.alt}
-                        style={{ objectPosition: img.position }}
-                        loading={i < 5 ? 'eager' : 'lazy'}
-                        decoding="async"
-                        draggable={false}
-                        onError={() => {
-                          if (!warnedSrcsRef.current.has(img.src)) {
-                            warnedSrcsRef.current.add(img.src);
-                            console.warn(`CurvedGallery: failed to load image "${img.src}"`);
-                          }
-                          setFailed((prev) => {
-                            const next = new Set(prev);
-                            next.add(img.src);
-                            return next;
-                          });
-                        }}
-                      />
-                    </figure>
-                  );
-                })}
-              </div>
-            </div>
+              <img
+                src={img.src}
+                alt={isCenter ? img.alt : ''}
+                style={{ objectPosition: img.position }}
+                loading={absPos <= 1 ? 'eager' : 'lazy'}
+                decoding="async"
+                draggable={false}
+              />
+            </figure>
           );
         })}
+      </div>
     </section>
   );
 }
