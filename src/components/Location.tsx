@@ -12,7 +12,7 @@ const FALLBACK_IMAGE = '/loc.jpg';
 function LocationBlock({ location, reverse }: { location: LocationInfo; reverse: boolean }) {
   const image = location.image ?? FALLBACK_IMAGE;
   const facts = (location.facts ?? []).slice(0, 4);
-  const mapHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location.address)}`;
+  const mapHref = location.mapUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location.address)}`;
 
   return (
     <div className="grid w-full lg:grid-cols-2">

@@ -60,7 +60,6 @@ export interface GuestAttireGroup {
   paletteLabel: string;
   image?: string | null;
   alt?: string;
-  /** Set to `true` when no final image exists yet; a temporary placeholder is rendered instead. */
   pendingImage: boolean;
   swatches: { color: string; label?: string }[];
 }
@@ -73,6 +72,7 @@ export interface LocationInfo {
   address: string;
   description: string;
   mapEmbedUrl: string;
+  mapUrl?: string;
   image?: string;
   facts?: { label: string; value: string }[];
 }
