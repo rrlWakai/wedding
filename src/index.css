@@ -327,3 +327,118 @@ h6 {
   .tl-aside{display:none}
 }
 @media (prefers-reduced-motion:reduce){.tl-walker{display:none}}
+
+/* ---- Background music sliders ---- */
+.music-progress,
+.music-volume {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.music-progress {
+  display: block;
+  width: 100%;
+  height: 14px;
+  margin: 0;
+}
+
+.music-volume {
+  display: block;
+  height: 20px;
+  margin: 0;
+}
+
+.music-progress::-webkit-slider-runnable-track {
+  height: 3px;
+  border-radius: 9999px;
+  background: linear-gradient(
+    to right,
+    #c5a059 0%,
+    #c5a059 var(--music-progress, 0%),
+    rgb(111 76 46 / 0.18) var(--music-progress, 0%),
+    rgb(111 76 46 / 0.18) 100%
+  );
+}
+
+.music-volume::-webkit-slider-runnable-track {
+  height: 3px;
+  border-radius: 9999px;
+  background: linear-gradient(
+    to right,
+    #c5a059 0%,
+    #c5a059 var(--music-progress, 60%),
+    rgb(111 76 46 / 0.18) var(--music-progress, 60%),
+    rgb(111 76 46 / 0.18) 100%
+  );
+}
+
+.music-progress::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 9px;
+  height: 9px;
+  margin-top: -3px;
+  border-radius: 9999px;
+  border: 2px solid #f5f0eb;
+  background: #c5a059;
+  box-shadow: 0 1px 3px rgb(111 76 46 / 0.35);
+}
+
+.music-volume::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 11px;
+  height: 11px;
+  margin-top: -4px;
+  border-radius: 9999px;
+  border: 2px solid #f5f0eb;
+  background: #c5a059;
+  box-shadow: 0 1px 3px rgb(111 76 46 / 0.35);
+}
+
+.music-progress::-moz-range-track,
+.music-volume::-moz-range-track {
+  height: 3px;
+  border-radius: 9999px;
+  background: rgb(111 76 46 / 0.18);
+}
+
+.music-progress::-moz-range-progress,
+.music-volume::-moz-range-progress {
+  height: 3px;
+  border-radius: 9999px;
+  background: #c5a059;
+}
+
+.music-progress::-moz-range-thumb,
+.music-volume::-moz-range-thumb {
+  width: 9px;
+  height: 9px;
+  border-radius: 9999px;
+  border: 2px solid #f5f0eb;
+  background: #c5a059;
+  box-shadow: 0 1px 3px rgb(111 76 46 / 0.35);
+}
+
+.music-progress:focus-visible {
+  outline: 2px solid #c5a059;
+  outline-offset: -2px;
+}
+
+.music-volume:focus-visible {
+  outline: 2px solid #c5a059;
+  outline-offset: 1px;
+  border-radius: 9999px;
+}
+
+.music-progress:disabled {
+  cursor: default;
+}
+
+@keyframes vinyl-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

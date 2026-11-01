@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
 import HeroCarousel from './components/HeroCarousel';
 import Countdown from './components/Countdown';
@@ -13,6 +14,7 @@ import { weddingInfo } from './data/wedding';
 import AnnouncementStrip from './components/AnnouncementStrip';
 import CurvedGallery from './components/CurvedGallery';
 import Preloader from './components/Preloader';
+import BackgroundMusic from './components/BackgroundMusic';
 
 const pageVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -21,11 +23,28 @@ const pageVariants = {
 };
 
 function App() {
+  const [introComplete, setIntroComplete] = useState(false);
+
+  useEffect(() => {
+    const query = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const syncIntro = () => {
+      if (query.matches) setIntroComplete(true);
+    };
+    syncIntro();
+    if (typeof query.addEventListener === 'function') {
+      query.addEventListener('change', syncIntro);
+      return () => query.removeEventListener('change', syncIntro);
+    }
+    query.addListener(syncIntro);
+    return () => query.removeListener(syncIntro);
+  }, []);
+
   return (
     <>
       <Preloader
         names={weddingInfo.hero.heading}
         imageToPreload={weddingInfo.hero.slides[0].image}
+        onDone={() => setIntroComplete(true)}
       />
       <AnimatePresence mode="wait">
       <motion.div
@@ -74,6 +93,7 @@ function App() {
         <Footer />
       </motion.div>
     </AnimatePresence>
+    <BackgroundMusic introComplete={introComplete} />
     </>
   );
 }
