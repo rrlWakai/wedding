@@ -11,8 +11,8 @@ import {
 } from 'react';
 
 const TRACK = {
-  title: 'Song Title',
-  artist: 'Artist Name',
+  title: 'Can\'t Help Falling In Love',
+  artist: 'Kina Grannis',
   cover: '/music/cover.jpg',
 };
 
