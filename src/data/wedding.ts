@@ -61,7 +61,7 @@ export const weddingInfo: WeddingInfo = {
       image: '/loc.jpg',
       facts: [
         { label: 'Ceremony', value: '2:00 PM' },
-        { label: 'Address', value: 'San Agustin Foursquare Gospel Church,, Q Manalon St, San Agustin, Romblon, Philippines' },
+        { label: 'Address', value: 'San Agustin Foursquare Gospel Church, Q Manalon St, San Agustin, Romblon, Philippines' },
       ],
     },
     {
