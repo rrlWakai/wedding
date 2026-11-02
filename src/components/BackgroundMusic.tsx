@@ -21,6 +21,7 @@ const VOLUME_STORAGE_KEY = 'wedding-music-volume';
 const PAUSED_STORAGE_KEY = 'wedding-music-paused';
 
 const DEFAULT_VOLUME = 0.6;
+const START_DELAY_MS = 2000;
 const FADE_IN_MS = 2000;
 const FADE_OUT_MS = 600;
 const COLLAPSE_DELAY_MS = 5000;
@@ -152,6 +153,7 @@ export default function BackgroundMusic({ introComplete = true }: BackgroundMusi
   const lastNonZeroVolumeRef = useRef(volume > 0 ? volume : DEFAULT_VOLUME);
   const pausedRef = useRef(initialPaused);
   const fadeFrameRef = useRef<number | null>(null);
+  const startTimerRef = useRef<number | null>(null);
   const collapseTimerRef = useRef<number | null>(null);
   const wasPlayingBeforeHideRef = useRef(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -159,6 +161,7 @@ export default function BackgroundMusic({ introComplete = true }: BackgroundMusi
   const playButtonRef = useRef<HTMLButtonElement | null>(null);
   const armUnlockRef = useRef<(() => void) | null>(null);
   const pendingPlayFocusRef = useRef(false);
+  const suppressToggleUntilRef = useRef(0);
 
   const reduceMotion = useReducedMotion() ?? false;
 
@@ -324,6 +327,7 @@ export default function BackgroundMusic({ introComplete = true }: BackgroundMusi
     const audio = audioRef.current;
 
     if (isPlaying) {
+      if (performance.now() < suppressToggleUntilRef.current) return;
       pausedRef.current = true;
       writeStoredPaused(true);
       setIsPlaying(false);
@@ -468,9 +472,7 @@ export default function BackgroundMusic({ introComplete = true }: BackgroundMusi
       setDuration(Number.isFinite(audio.duration) ? audio.duration : 0);
     };
     const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
-    const handlePlay = () => {
-      if (!pausedRef.current) setIsPlaying(true);
-    };
+    const handlePlay = () => setIsPlaying(true);
     const handlePause = () => setIsPlaying(false);
 
     audio.addEventListener('loadedmetadata', handleLoadedMetadata);
@@ -522,9 +524,7 @@ export default function BackgroundMusic({ introComplete = true }: BackgroundMusi
 
     armUnlockRef.current = armUnlockListeners;
 
-    if (!pausedRef.current) {
-      startPlayback(true, true);
-    } else {
+    if (pausedRef.current) {
       setIsPlaying(false);
     }
 
@@ -538,6 +538,10 @@ export default function BackgroundMusic({ introComplete = true }: BackgroundMusi
       audio.removeEventListener('pause', handlePause);
       armUnlockRef.current = null;
       cancelFade();
+      if (startTimerRef.current !== null) {
+        window.clearTimeout(startTimerRef.current);
+        startTimerRef.current = null;
+      }
       if (collapseTimerRef.current !== null) {
         window.clearTimeout(collapseTimerRef.current);
         collapseTimerRef.current = null;
@@ -548,6 +552,61 @@ export default function BackgroundMusic({ introComplete = true }: BackgroundMusi
       audioRef.current = null;
     };
   }, []);
+
+  useEffect(() => {
+    if (!introComplete) return;
+    if (pausedRef.current) return;
+
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    let started = false;
+
+    const clearStartTimer = () => {
+      if (startTimerRef.current !== null) {
+        window.clearTimeout(startTimerRef.current);
+        startTimerRef.current = null;
+      }
+    };
+
+    const removeEarlyListeners = () => {
+      window.removeEventListener('pointerdown', handleEarlyInteraction);
+      window.removeEventListener('touchstart', handleEarlyInteraction);
+      window.removeEventListener('keydown', handleEarlyInteraction);
+      window.removeEventListener('wheel', handleEarlyInteraction);
+      window.removeEventListener('scroll', handleEarlyInteraction, true);
+    };
+
+    const startNow = () => {
+      if (started) return;
+      started = true;
+      clearStartTimer();
+      removeEarlyListeners();
+      if (pausedRef.current) return;
+      startPlayback(true, true);
+    };
+
+    function handleEarlyInteraction() {
+      suppressToggleUntilRef.current = performance.now() + 500;
+      startNow();
+    }
+
+    window.addEventListener('pointerdown', handleEarlyInteraction);
+    window.addEventListener('touchstart', handleEarlyInteraction, { passive: true });
+    window.addEventListener('keydown', handleEarlyInteraction);
+    window.addEventListener('wheel', handleEarlyInteraction, { passive: true });
+    window.addEventListener('scroll', handleEarlyInteraction, { passive: true, capture: true });
+
+    startTimerRef.current = window.setTimeout(() => {
+      startTimerRef.current = null;
+      startNow();
+    }, START_DELAY_MS);
+
+    return () => {
+      clearStartTimer();
+      removeEarlyListeners();
+    };
+  }, [introComplete]);
 
   if (!isVisible) return null;
 
